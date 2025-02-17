@@ -1,0 +1,5180 @@
+[
+  {
+    "type": "example",
+    "question": "Design a containerized application architecture with ECS",
+    "answer": "This architecture shows a containerized application running on Amazon ECS with load balancing and RDS database.",
+    "code": "from diagrams import Diagram\nfrom diagrams.aws.compute import ECS\nfrom diagrams.aws.database import RDS\nfrom diagrams.aws.network import ELB\n\nwith Diagram(\"Containerized App\", show=False):\n    lb = ELB(\"Load Balancer\")\n    containers = [ECS(\"Container 1\"),\n                 ECS(\"Container 2\")]\n    db = RDS(\"Database\")\n    \n    lb >> containers >> db"
+  },
+  {
+    "type": "example",
+    "question": "Create a serverless API with AWS Lambda and DynamoDB",
+    "answer": "This architecture demonstrates a basic serverless API setup using AWS Lambda for request handling and DynamoDB for data storage.",
+    "code": "from diagrams import Diagram\nfrom diagrams.aws.compute import Lambda\nfrom diagrams.aws.database import DynamoDB\nfrom diagrams.aws.network import APIGateway\n\nwith Diagram(\"Serverless API\", show=False):\n    api = APIGateway(\"API Gateway\")\n    lambda_fn = Lambda(\"API Handler\")\n    db = DynamoDB(\"Users Table\")\n    \n    api >> lambda_fn >> db"
+  },
+  {
+    "type": "example",
+    "question": "Create a microservices architecture using Azure Kubernetes Service",
+    "answer": "This architecture demonstrates a microservices setup using AKS with Azure SQL Database for persistence.",
+    "code": "from diagrams import Diagram\nfrom diagrams.azure.compute import AKS\nfrom diagrams.azure.database import SQLDatabases\nfrom diagrams.azure.network import LoadBalancers\n\nwith Diagram(\"Azure Microservices\", show=False):\n    lb = LoadBalancers(\"Load Balancer\")\n    aks = AKS(\"Kubernetes\")\n    db = SQLDatabases(\"Azure SQL\")\n    \n    lb >> aks >> db"
+  },
+  {
+    "type": "example",
+    "question": "Design a machine learning pipeline on Google Cloud",
+    "answer": "This architecture shows a machine learning pipeline using various GCP services for data processing and model training.",
+    "code": "from diagrams import Diagram\nfrom diagrams.gcp.analytics import BigQuery, Dataflow\nfrom diagrams.gcp.ml import AIPlatform\n\nwith Diagram(\"ML Pipeline\", show=False):\n    bq = BigQuery(\"Data Warehouse\")\n    flow = Dataflow(\"Data Processing\")\n    ml = AIPlatform(\"Model Training\")\n    \n    bq >> flow >> ml"
+  },
+  {
+    "type": "example",
+    "question": "How to design a clustered web services architecture with caching?",
+    "answer": "This example demonstrates a clustered web service setup with DNS, load balancing, multiple web servers, database replication, and caching.",
+    "code": "from diagrams import Cluster, Diagram\nfrom diagrams.aws.compute import ECS\nfrom diagrams.aws.database import ElastiCache, RDS\nfrom diagrams.aws.network import ELB\nfrom diagrams.aws.network import Route53\n\nwith Diagram(\"Clustered Web Services\", show=False):\n    dns = Route53(\"dns\")\n    lb = ELB(\"lb\")\n\n    with Cluster(\"Services\"):\n        svc_group = [ECS(\"web1\"),\n                     ECS(\"web2\"),\n                     ECS(\"web3\")]\n\n    with Cluster(\"DB Cluster\"):\n        db_primary = RDS(\"userdb\")\n        db_primary - [RDS(\"userdb ro\")]\n\n    memcached = ElastiCache(\"memcached\")\n\n    dns >> lb >> svc_group\n    svc_group >> db_primary\n    svc_group >> memcached"
+  },
+  {
+    "type": "example",
+    "question": "How to create diagrams with custom icons and message brokers?",
+    "answer": "This example demonstrates using custom icons and showing a message broker architecture with Kubernetes consumers.",
+    "code": "from urllib.request import urlretrieve\n\nfrom diagrams import Cluster, Diagram\nfrom diagrams.aws.database import Aurora\nfrom diagrams.custom import Custom\nfrom diagrams.k8s.compute import Pod\n\n# Download an image to be used into a Custom Node class\nrabbitmq_url = \"https://jpadilla.github.io/rabbitmqapp/assets/img/icon.png\"\nrabbitmq_icon = \"rabbitmq.png\"\nurlretrieve(rabbitmq_url, rabbitmq_icon)\n\nwith Diagram(\"Broker Consumers\", show=False):\n    with Cluster(\"Consumers\"):\n        consumers = [\n            Pod(\"worker\"),\n            Pod(\"worker\"),\n            Pod(\"worker\")]\n\n    queue = Custom(\"Message queue\", rabbitmq_icon)\n\n    queue >> consumers >> Aurora(\"Database\")"
+  },
+  {
+    "type": "example",
+    "question": "How to implement an event processing architecture?",
+    "answer": "This example shows a complex event processing system with Kubernetes source, worker clusters, queues, and multiple processing handlers.",
+    "code": "from diagrams import Cluster, Diagram\nfrom diagrams.aws.compute import ECS, EKS, Lambda\nfrom diagrams.aws.database import Redshift\nfrom diagrams.aws.integration import SQS\nfrom diagrams.aws.storage import S3\n\nwith Diagram(\"Event Processing\", show=False):\n    source = EKS(\"k8s source\")\n\n    with Cluster(\"Event Flows\"):\n        with Cluster(\"Event Workers\"):\n            workers = [ECS(\"worker1\"),\n                       ECS(\"worker2\"),\n                       ECS(\"worker3\")]\n\n        queue = SQS(\"event queue\")\n\n        with Cluster(\"Processing\"):\n            handlers = [Lambda(\"proc1\"),\n                        Lambda(\"proc2\"),\n                        Lambda(\"proc3\")]\n\n    store = S3(\"events store\")\n    dw = Redshift(\"analytics\")\n\n    source >> workers >> queue >> handlers\n    handlers >> store\n    handlers >> dw"
+  },
+  {
+    "type": "example",
+    "question": "How to represent a load-balanced worker pool architecture?",
+    "answer": "This example shows multiple EC2 workers behind a load balancer writing to a central database.",
+    "code": "from diagrams import Diagram\nfrom diagrams.aws.compute import EC2\nfrom diagrams.aws.database import RDS\nfrom diagrams.aws.network import ELB\n\nwith Diagram(\"Grouped Workers\", show=False, direction=\"TB\"):\n    ELB(\"lb\") >> [EC2(\"worker1\"),\n                  EC2(\"worker2\"),\n                  EC2(\"worker3\"),\n                  EC2(\"worker4\"),\n                  EC2(\"worker5\")] >> RDS(\"events\")"
+  },
+  {
+    "type": "example",
+    "question": "How to diagram a stateful Kubernetes architecture?",
+    "answer": "This example shows a stateful application in Kubernetes with persistent volumes and storage classes.",
+    "code": "from diagrams import Cluster, Diagram\nfrom diagrams.k8s.compute import Pod, StatefulSet\nfrom diagrams.k8s.network import Service\nfrom diagrams.k8s.storage import PV, PVC, StorageClass\n\nwith Diagram(\"Stateful Architecture\", show=False):\n    with Cluster(\"Apps\"):\n        svc = Service(\"svc\")\n        sts = StatefulSet(\"sts\")\n\n        apps = []\n        for _ in range(3):\n            pod = Pod(\"pod\")\n            pvc = PVC(\"pvc\")\n            pod - sts - pvc\n            apps.append(svc >> pod >> pvc)\n\n    apps << PV(\"pv\") << StorageClass(\"sc\")"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "AnalyticDb",
+    "module": "diagrams.alibabacloud.analytics",
+    "description": "AnalyticDb is a ALIBABACLOUD analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "ClickHouse",
+    "module": "diagrams.alibabacloud.analytics",
+    "description": "ClickHouse is a ALIBABACLOUD analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "DataLakeAnalytics",
+    "module": "diagrams.alibabacloud.analytics",
+    "description": "DataLakeAnalytics is a ALIBABACLOUD analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "ApiGateway",
+    "module": "diagrams.alibabacloud.application",
+    "description": "ApiGateway is a ALIBABACLOUD application component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "BeeBot",
+    "module": "diagrams.alibabacloud.application",
+    "description": "BeeBot is a ALIBABACLOUD application component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "BlockchainAsAService",
+    "module": "diagrams.alibabacloud.application",
+    "description": "BlockchainAsAService is a ALIBABACLOUD application component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "DirectMail",
+    "module": "diagrams.alibabacloud.communication",
+    "description": "DirectMail is a ALIBABACLOUD communication component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "MobilePush",
+    "module": "diagrams.alibabacloud.communication",
+    "description": "MobilePush is a ALIBABACLOUD communication component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "AutoScaling",
+    "module": "diagrams.alibabacloud.compute",
+    "description": "AutoScaling is a ALIBABACLOUD compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "BatchCompute",
+    "module": "diagrams.alibabacloud.compute",
+    "description": "BatchCompute is a ALIBABACLOUD compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "ContainerRegistry",
+    "module": "diagrams.alibabacloud.compute",
+    "description": "ContainerRegistry is a ALIBABACLOUD compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "ApsaradbCassandra",
+    "module": "diagrams.alibabacloud.database",
+    "description": "ApsaradbCassandra is a ALIBABACLOUD database component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "ApsaradbHbase",
+    "module": "diagrams.alibabacloud.database",
+    "description": "ApsaradbHbase is a ALIBABACLOUD database component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "ApsaradbMemcache",
+    "module": "diagrams.alibabacloud.database",
+    "description": "ApsaradbMemcache is a ALIBABACLOUD database component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "IotInternetDeviceId",
+    "module": "diagrams.alibabacloud.iot",
+    "description": "IotInternetDeviceId is a ALIBABACLOUD iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "IotLinkWan",
+    "module": "diagrams.alibabacloud.iot",
+    "description": "IotLinkWan is a ALIBABACLOUD iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "IotMobileConnectionPackage",
+    "module": "diagrams.alibabacloud.iot",
+    "description": "IotMobileConnectionPackage is a ALIBABACLOUD iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "CEN",
+    "module": "diagrams.alibabacloud.network",
+    "description": "CEN is a ALIBABACLOUD network component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "Cdn",
+    "module": "diagrams.alibabacloud.network",
+    "description": "Cdn is a ALIBABACLOUD network component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "CloudEnterpriseNetwork",
+    "module": "diagrams.alibabacloud.network",
+    "description": "CloudEnterpriseNetwork is a ALIBABACLOUD network component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "EIP",
+    "module": "diagrams.alibabacloud.network",
+    "description": "EIP is a ALIBABACLOUD network component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "ElasticIpAddress",
+    "module": "diagrams.alibabacloud.network",
+    "description": "ElasticIpAddress is a ALIBABACLOUD network component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "ABS",
+    "module": "diagrams.alibabacloud.security",
+    "description": "ABS is a ALIBABACLOUD security component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "AS",
+    "module": "diagrams.alibabacloud.security",
+    "description": "AS is a ALIBABACLOUD security component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "AntiBotService",
+    "module": "diagrams.alibabacloud.security",
+    "description": "AntiBotService is a ALIBABACLOUD security component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "AntiDdosBasic",
+    "module": "diagrams.alibabacloud.security",
+    "description": "AntiDdosBasic is a ALIBABACLOUD security component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "AntiDdosPro",
+    "module": "diagrams.alibabacloud.security",
+    "description": "AntiDdosPro is a ALIBABACLOUD security component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "CloudStorageGateway",
+    "module": "diagrams.alibabacloud.storage",
+    "description": "CloudStorageGateway is a ALIBABACLOUD storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "FileStorageHdfs",
+    "module": "diagrams.alibabacloud.storage",
+    "description": "FileStorageHdfs is a ALIBABACLOUD storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "FileStorageNas",
+    "module": "diagrams.alibabacloud.storage",
+    "description": "FileStorageNas is a ALIBABACLOUD storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "HBR",
+    "module": "diagrams.alibabacloud.storage",
+    "description": "HBR is a ALIBABACLOUD storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "Dns",
+    "module": "diagrams.alibabacloud.web",
+    "description": "Dns is a ALIBABACLOUD web component"
+  },
+  {
+    "type": "provider",
+    "provider": "alibabacloud",
+    "component": "Domain",
+    "module": "diagrams.alibabacloud.web",
+    "description": "Domain is a ALIBABACLOUD web component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AmazonOpensearchService",
+    "module": "diagrams.aws.analytics",
+    "description": "AmazonOpensearchService is a AWS analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Analytics",
+    "module": "diagrams.aws.analytics",
+    "description": "Analytics is a AWS analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Athena",
+    "module": "diagrams.aws.analytics",
+    "description": "Athena is a AWS analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Cloudsearch",
+    "module": "diagrams.aws.analytics",
+    "description": "Cloudsearch is a AWS analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ArVr",
+    "module": "diagrams.aws.ar",
+    "description": "ArVr is a AWS ar component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Sumerian",
+    "module": "diagrams.aws.ar",
+    "description": "Sumerian is a AWS ar component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Blockchain",
+    "module": "diagrams.aws.blockchain",
+    "description": "Blockchain is a AWS blockchain component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "BlockchainResource",
+    "module": "diagrams.aws.blockchain",
+    "description": "BlockchainResource is a AWS blockchain component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ManagedBlockchain",
+    "module": "diagrams.aws.blockchain",
+    "description": "ManagedBlockchain is a AWS blockchain component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "QLDB",
+    "module": "diagrams.aws.blockchain",
+    "description": "QLDB is a AWS blockchain component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "A4B",
+    "module": "diagrams.aws.business",
+    "description": "A4B is a AWS business component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AlexaForBusiness",
+    "module": "diagrams.aws.business",
+    "description": "AlexaForBusiness is a AWS business component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "BusinessApplications",
+    "module": "diagrams.aws.business",
+    "description": "BusinessApplications is a AWS business component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Chime",
+    "module": "diagrams.aws.business",
+    "description": "Chime is a AWS business component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Workmail",
+    "module": "diagrams.aws.business",
+    "description": "Workmail is a AWS business component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AMI",
+    "module": "diagrams.aws.compute",
+    "description": "AMI is a AWS compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AppRunner",
+    "module": "diagrams.aws.compute",
+    "description": "AppRunner is a AWS compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ApplicationAutoScaling",
+    "module": "diagrams.aws.compute",
+    "description": "ApplicationAutoScaling is a AWS compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AutoScaling",
+    "module": "diagrams.aws.compute",
+    "description": "AutoScaling is a AWS compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Batch",
+    "module": "diagrams.aws.compute",
+    "description": "Batch is a AWS compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Budgets",
+    "module": "diagrams.aws.cost",
+    "description": "Budgets is a AWS cost component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CostAndUsageReport",
+    "module": "diagrams.aws.cost",
+    "description": "CostAndUsageReport is a AWS cost component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CostExplorer",
+    "module": "diagrams.aws.cost",
+    "description": "CostExplorer is a AWS cost component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CostManagement",
+    "module": "diagrams.aws.cost",
+    "description": "CostManagement is a AWS cost component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Aurora",
+    "module": "diagrams.aws.database",
+    "description": "Aurora is a AWS database component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AuroraInstance",
+    "module": "diagrams.aws.database",
+    "description": "AuroraInstance is a AWS database component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "DAX",
+    "module": "diagrams.aws.database",
+    "description": "DAX is a AWS database component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "DB",
+    "module": "diagrams.aws.database",
+    "description": "DB is a AWS database component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "DDB",
+    "module": "diagrams.aws.database",
+    "description": "DDB is a AWS database component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "DMS",
+    "module": "diagrams.aws.database",
+    "description": "DMS is a AWS database component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Database",
+    "module": "diagrams.aws.database",
+    "description": "Database is a AWS database component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CLI",
+    "module": "diagrams.aws.devtools",
+    "description": "CLI is a AWS devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Cloud9",
+    "module": "diagrams.aws.devtools",
+    "description": "Cloud9 is a AWS devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Cloud9Resource",
+    "module": "diagrams.aws.devtools",
+    "description": "Cloud9Resource is a AWS devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CloudDevelopmentKit",
+    "module": "diagrams.aws.devtools",
+    "description": "CloudDevelopmentKit is a AWS devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Codeartifact",
+    "module": "diagrams.aws.devtools",
+    "description": "Codeartifact is a AWS devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CustomerEnablement",
+    "module": "diagrams.aws.enablement",
+    "description": "CustomerEnablement is a AWS enablement component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Iq",
+    "module": "diagrams.aws.enablement",
+    "description": "Iq is a AWS enablement component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ManagedServices",
+    "module": "diagrams.aws.enablement",
+    "description": "ManagedServices is a AWS enablement component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ProfessionalServices",
+    "module": "diagrams.aws.enablement",
+    "description": "ProfessionalServices is a AWS enablement component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Appstream20",
+    "module": "diagrams.aws.enduser",
+    "description": "Appstream20 is a AWS enduser component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "DesktopAndAppStreaming",
+    "module": "diagrams.aws.enduser",
+    "description": "DesktopAndAppStreaming is a AWS enduser component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Workdocs",
+    "module": "diagrams.aws.enduser",
+    "description": "Workdocs is a AWS enduser component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Worklink",
+    "module": "diagrams.aws.enduser",
+    "description": "Worklink is a AWS enduser component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Workspaces",
+    "module": "diagrams.aws.enduser",
+    "description": "Workspaces is a AWS enduser component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Connect",
+    "module": "diagrams.aws.engagement",
+    "description": "Connect is a AWS engagement component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CustomerEngagement",
+    "module": "diagrams.aws.engagement",
+    "description": "CustomerEngagement is a AWS engagement component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Pinpoint",
+    "module": "diagrams.aws.engagement",
+    "description": "Pinpoint is a AWS engagement component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "SES",
+    "module": "diagrams.aws.engagement",
+    "description": "SES is a AWS engagement component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "GameTech",
+    "module": "diagrams.aws.game",
+    "description": "GameTech is a AWS game component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Gamelift",
+    "module": "diagrams.aws.game",
+    "description": "Gamelift is a AWS game component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Client",
+    "module": "diagrams.aws.general",
+    "description": "Client is a AWS general component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Disk",
+    "module": "diagrams.aws.general",
+    "description": "Disk is a AWS general component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Forums",
+    "module": "diagrams.aws.general",
+    "description": "Forums is a AWS general component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "General",
+    "module": "diagrams.aws.general",
+    "description": "General is a AWS general component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "GenericDatabase",
+    "module": "diagrams.aws.general",
+    "description": "GenericDatabase is a AWS general component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "GenericFirewall",
+    "module": "diagrams.aws.general",
+    "description": "GenericFirewall is a AWS general component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ApplicationIntegration",
+    "module": "diagrams.aws.integration",
+    "description": "ApplicationIntegration is a AWS integration component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Appsync",
+    "module": "diagrams.aws.integration",
+    "description": "Appsync is a AWS integration component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ConsoleMobileApplication",
+    "module": "diagrams.aws.integration",
+    "description": "ConsoleMobileApplication is a AWS integration component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "FreeRTOS",
+    "module": "diagrams.aws.iot",
+    "description": "FreeRTOS is a AWS iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Freertos",
+    "module": "diagrams.aws.iot",
+    "description": "Freertos is a AWS iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "InternetOfThings",
+    "module": "diagrams.aws.iot",
+    "description": "InternetOfThings is a AWS iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Iot1Click",
+    "module": "diagrams.aws.iot",
+    "description": "Iot1Click is a AWS iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "IotAction",
+    "module": "diagrams.aws.iot",
+    "description": "IotAction is a AWS iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AmazonDevopsGuru",
+    "module": "diagrams.aws.management",
+    "description": "AmazonDevopsGuru is a AWS management component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AmazonManagedGrafana",
+    "module": "diagrams.aws.management",
+    "description": "AmazonManagedGrafana is a AWS management component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AmazonManagedPrometheus",
+    "module": "diagrams.aws.management",
+    "description": "AmazonManagedPrometheus is a AWS management component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ElasticTranscoder",
+    "module": "diagrams.aws.media",
+    "description": "ElasticTranscoder is a AWS media component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ElementalConductor",
+    "module": "diagrams.aws.media",
+    "description": "ElementalConductor is a AWS media component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ElementalDelta",
+    "module": "diagrams.aws.media",
+    "description": "ElementalDelta is a AWS media component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ElementalLive",
+    "module": "diagrams.aws.media",
+    "description": "ElementalLive is a AWS media component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ADS",
+    "module": "diagrams.aws.migration",
+    "description": "ADS is a AWS migration component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ApplicationDiscoveryService",
+    "module": "diagrams.aws.migration",
+    "description": "ApplicationDiscoveryService is a AWS migration component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CEM",
+    "module": "diagrams.aws.migration",
+    "description": "CEM is a AWS migration component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CloudendureMigration",
+    "module": "diagrams.aws.migration",
+    "description": "CloudendureMigration is a AWS migration component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "DMS",
+    "module": "diagrams.aws.migration",
+    "description": "DMS is a AWS migration component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ApacheMxnetOnAWS",
+    "module": "diagrams.aws.ml",
+    "description": "ApacheMxnetOnAWS is a AWS ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AugmentedAi",
+    "module": "diagrams.aws.ml",
+    "description": "AugmentedAi is a AWS ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Comprehend",
+    "module": "diagrams.aws.ml",
+    "description": "Comprehend is a AWS ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "DLC",
+    "module": "diagrams.aws.ml",
+    "description": "DLC is a AWS ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "DeepLearningAmis",
+    "module": "diagrams.aws.ml",
+    "description": "DeepLearningAmis is a AWS ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "APIGateway",
+    "module": "diagrams.aws.mobile",
+    "description": "APIGateway is a AWS mobile component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "APIGatewayEndpoint",
+    "module": "diagrams.aws.mobile",
+    "description": "APIGatewayEndpoint is a AWS mobile component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Amplify",
+    "module": "diagrams.aws.mobile",
+    "description": "Amplify is a AWS mobile component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Appsync",
+    "module": "diagrams.aws.mobile",
+    "description": "Appsync is a AWS mobile component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "DeviceFarm",
+    "module": "diagrams.aws.mobile",
+    "description": "DeviceFarm is a AWS mobile component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ALB",
+    "module": "diagrams.aws.network",
+    "description": "ALB is a AWS network component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "APIGateway",
+    "module": "diagrams.aws.network",
+    "description": "APIGateway is a AWS network component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "APIGatewayEndpoint",
+    "module": "diagrams.aws.network",
+    "description": "APIGatewayEndpoint is a AWS network component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AppMesh",
+    "module": "diagrams.aws.network",
+    "description": "AppMesh is a AWS network component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CF",
+    "module": "diagrams.aws.network",
+    "description": "CF is a AWS network component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CLB",
+    "module": "diagrams.aws.network",
+    "description": "CLB is a AWS network component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ClientVpn",
+    "module": "diagrams.aws.network",
+    "description": "ClientVpn is a AWS network component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Braket",
+    "module": "diagrams.aws.quantum",
+    "description": "Braket is a AWS quantum component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "QuantumTechnologies",
+    "module": "diagrams.aws.quantum",
+    "description": "QuantumTechnologies is a AWS quantum component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Robomaker",
+    "module": "diagrams.aws.robotics",
+    "description": "Robomaker is a AWS robotics component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "RobomakerCloudExtensionRos",
+    "module": "diagrams.aws.robotics",
+    "description": "RobomakerCloudExtensionRos is a AWS robotics component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "GroundStation",
+    "module": "diagrams.aws.satellite",
+    "description": "GroundStation is a AWS satellite component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Satellite",
+    "module": "diagrams.aws.satellite",
+    "description": "Satellite is a AWS satellite component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "ACM",
+    "module": "diagrams.aws.security",
+    "description": "ACM is a AWS security component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "AdConnector",
+    "module": "diagrams.aws.security",
+    "description": "AdConnector is a AWS security component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Artifact",
+    "module": "diagrams.aws.security",
+    "description": "Artifact is a AWS security component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CertificateAuthority",
+    "module": "diagrams.aws.security",
+    "description": "CertificateAuthority is a AWS security component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "Backup",
+    "module": "diagrams.aws.storage",
+    "description": "Backup is a AWS storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CDR",
+    "module": "diagrams.aws.storage",
+    "description": "CDR is a AWS storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "CloudendureDisasterRecovery",
+    "module": "diagrams.aws.storage",
+    "description": "CloudendureDisasterRecovery is a AWS storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "EBS",
+    "module": "diagrams.aws.storage",
+    "description": "EBS is a AWS storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "aws",
+    "component": "EFS",
+    "module": "diagrams.aws.storage",
+    "description": "EFS is a AWS storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "AnalysisServices",
+    "module": "diagrams.azure.analytics",
+    "description": "AnalysisServices is a AZURE analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DataExplorerClusters",
+    "module": "diagrams.azure.analytics",
+    "description": "DataExplorerClusters is a AZURE analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DataFactories",
+    "module": "diagrams.azure.analytics",
+    "description": "DataFactories is a AZURE analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ACR",
+    "module": "diagrams.azure.compute",
+    "description": "ACR is a AZURE compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "AKS",
+    "module": "diagrams.azure.compute",
+    "description": "AKS is a AZURE compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "AppServices",
+    "module": "diagrams.azure.compute",
+    "description": "AppServices is a AZURE compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "AutomanagedVM",
+    "module": "diagrams.azure.compute",
+    "description": "AutomanagedVM is a AZURE compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "AvailabilitySets",
+    "module": "diagrams.azure.compute",
+    "description": "AvailabilitySets is a AZURE compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "BlobStorage",
+    "module": "diagrams.azure.database",
+    "description": "BlobStorage is a AZURE database component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "CacheForRedis",
+    "module": "diagrams.azure.database",
+    "description": "CacheForRedis is a AZURE database component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "CosmosDb",
+    "module": "diagrams.azure.database",
+    "description": "CosmosDb is a AZURE database component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DataExplorerClusters",
+    "module": "diagrams.azure.database",
+    "description": "DataExplorerClusters is a AZURE database component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ApplicationInsights",
+    "module": "diagrams.azure.devops",
+    "description": "ApplicationInsights is a AZURE devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Artifacts",
+    "module": "diagrams.azure.devops",
+    "description": "Artifacts is a AZURE devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Boards",
+    "module": "diagrams.azure.devops",
+    "description": "Boards is a AZURE devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Devops",
+    "module": "diagrams.azure.devops",
+    "description": "Devops is a AZURE devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DevtestLabs",
+    "module": "diagrams.azure.devops",
+    "description": "DevtestLabs is a AZURE devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Allresources",
+    "module": "diagrams.azure.general",
+    "description": "Allresources is a AZURE general component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Azurehome",
+    "module": "diagrams.azure.general",
+    "description": "Azurehome is a AZURE general component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Developertools",
+    "module": "diagrams.azure.general",
+    "description": "Developertools is a AZURE general component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Helpsupport",
+    "module": "diagrams.azure.general",
+    "description": "Helpsupport is a AZURE general component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ADB2C",
+    "module": "diagrams.azure.identity",
+    "description": "ADB2C is a AZURE identity component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ADDomainServices",
+    "module": "diagrams.azure.identity",
+    "description": "ADDomainServices is a AZURE identity component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ADIdentityProtection",
+    "module": "diagrams.azure.identity",
+    "description": "ADIdentityProtection is a AZURE identity component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "APIForFhir",
+    "module": "diagrams.azure.integration",
+    "description": "APIForFhir is a AZURE integration component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "APIManagement",
+    "module": "diagrams.azure.integration",
+    "description": "APIManagement is a AZURE integration component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "AppConfiguration",
+    "module": "diagrams.azure.integration",
+    "description": "AppConfiguration is a AZURE integration component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DataCatalog",
+    "module": "diagrams.azure.integration",
+    "description": "DataCatalog is a AZURE integration component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DeviceProvisioningServices",
+    "module": "diagrams.azure.iot",
+    "description": "DeviceProvisioningServices is a AZURE iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DigitalTwins",
+    "module": "diagrams.azure.iot",
+    "description": "DigitalTwins is a AZURE iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "IotCentralApplications",
+    "module": "diagrams.azure.iot",
+    "description": "IotCentralApplications is a AZURE iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DataBox",
+    "module": "diagrams.azure.migration",
+    "description": "DataBox is a AZURE migration component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DataBoxEdge",
+    "module": "diagrams.azure.migration",
+    "description": "DataBoxEdge is a AZURE migration component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DatabaseMigrationServices",
+    "module": "diagrams.azure.migration",
+    "description": "DatabaseMigrationServices is a AZURE migration component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "BatchAI",
+    "module": "diagrams.azure.ml",
+    "description": "BatchAI is a AZURE ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "BotServices",
+    "module": "diagrams.azure.ml",
+    "description": "BotServices is a AZURE ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "CognitiveServices",
+    "module": "diagrams.azure.ml",
+    "description": "CognitiveServices is a AZURE ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "GenomicsAccounts",
+    "module": "diagrams.azure.ml",
+    "description": "GenomicsAccounts is a AZURE ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "AppServiceMobile",
+    "module": "diagrams.azure.mobile",
+    "description": "AppServiceMobile is a AZURE mobile component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "MobileEngagement",
+    "module": "diagrams.azure.mobile",
+    "description": "MobileEngagement is a AZURE mobile component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "NotificationHubs",
+    "module": "diagrams.azure.mobile",
+    "description": "NotificationHubs is a AZURE mobile component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ChangeAnalysis",
+    "module": "diagrams.azure.monitor",
+    "description": "ChangeAnalysis is a AZURE monitor component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Logs",
+    "module": "diagrams.azure.monitor",
+    "description": "Logs is a AZURE monitor component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Metrics",
+    "module": "diagrams.azure.monitor",
+    "description": "Metrics is a AZURE monitor component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Monitor",
+    "module": "diagrams.azure.monitor",
+    "description": "Monitor is a AZURE monitor component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ApplicationGateway",
+    "module": "diagrams.azure.network",
+    "description": "ApplicationGateway is a AZURE network component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ApplicationSecurityGroups",
+    "module": "diagrams.azure.network",
+    "description": "ApplicationSecurityGroups is a AZURE network component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "CDNProfiles",
+    "module": "diagrams.azure.network",
+    "description": "CDNProfiles is a AZURE network component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ApplicationSecurityGroups",
+    "module": "diagrams.azure.security",
+    "description": "ApplicationSecurityGroups is a AZURE security component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ConditionalAccess",
+    "module": "diagrams.azure.security",
+    "description": "ConditionalAccess is a AZURE security component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Defender",
+    "module": "diagrams.azure.security",
+    "description": "Defender is a AZURE security component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "ArchiveStorage",
+    "module": "diagrams.azure.storage",
+    "description": "ArchiveStorage is a AZURE storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "Azurefxtedgefiler",
+    "module": "diagrams.azure.storage",
+    "description": "Azurefxtedgefiler is a AZURE storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "BlobStorage",
+    "module": "diagrams.azure.storage",
+    "description": "BlobStorage is a AZURE storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "DataBox",
+    "module": "diagrams.azure.storage",
+    "description": "DataBox is a AZURE storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "APIConnections",
+    "module": "diagrams.azure.web",
+    "description": "APIConnections is a AZURE web component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "AppServiceCertificates",
+    "module": "diagrams.azure.web",
+    "description": "AppServiceCertificates is a AZURE web component"
+  },
+  {
+    "type": "provider",
+    "provider": "azure",
+    "component": "AppServiceDomains",
+    "module": "diagrams.azure.web",
+    "description": "AppServiceDomains is a AZURE web component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "Containers",
+    "module": "diagrams.digitalocean.compute",
+    "description": "Containers is a DIGITALOCEAN compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "Docker",
+    "module": "diagrams.digitalocean.compute",
+    "description": "Docker is a DIGITALOCEAN compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "Droplet",
+    "module": "diagrams.digitalocean.compute",
+    "description": "Droplet is a DIGITALOCEAN compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "DropletConnect",
+    "module": "diagrams.digitalocean.compute",
+    "description": "DropletConnect is a DIGITALOCEAN compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "DbaasPrimary",
+    "module": "diagrams.digitalocean.database",
+    "description": "DbaasPrimary is a DIGITALOCEAN database component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "DbaasPrimaryStandbyMore",
+    "module": "diagrams.digitalocean.database",
+    "description": "DbaasPrimaryStandbyMore is a DIGITALOCEAN database component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "DbaasReadOnly",
+    "module": "diagrams.digitalocean.database",
+    "description": "DbaasReadOnly is a DIGITALOCEAN database component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "Certificate",
+    "module": "diagrams.digitalocean.network",
+    "description": "Certificate is a DIGITALOCEAN network component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "Domain",
+    "module": "diagrams.digitalocean.network",
+    "description": "Domain is a DIGITALOCEAN network component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "DomainRegistration",
+    "module": "diagrams.digitalocean.network",
+    "description": "DomainRegistration is a DIGITALOCEAN network component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "Firewall",
+    "module": "diagrams.digitalocean.network",
+    "description": "Firewall is a DIGITALOCEAN network component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "Folder",
+    "module": "diagrams.digitalocean.storage",
+    "description": "Folder is a DIGITALOCEAN storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "Space",
+    "module": "diagrams.digitalocean.storage",
+    "description": "Space is a DIGITALOCEAN storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "Volume",
+    "module": "diagrams.digitalocean.storage",
+    "description": "Volume is a DIGITALOCEAN storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "digitalocean",
+    "component": "VolumeSnapshot",
+    "module": "diagrams.digitalocean.storage",
+    "description": "VolumeSnapshot is a DIGITALOCEAN storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Agent",
+    "module": "diagrams.elastic.agent",
+    "description": "Agent is a ELASTIC agent component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Endpoint",
+    "module": "diagrams.elastic.agent",
+    "description": "Endpoint is a ELASTIC agent component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Fleet",
+    "module": "diagrams.elastic.agent",
+    "description": "Fleet is a ELASTIC agent component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Integrations",
+    "module": "diagrams.elastic.agent",
+    "description": "Integrations is a ELASTIC agent component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "APM",
+    "module": "diagrams.elastic.beats",
+    "description": "APM is a ELASTIC beats component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Auditbeat",
+    "module": "diagrams.elastic.beats",
+    "description": "Auditbeat is a ELASTIC beats component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Filebeat",
+    "module": "diagrams.elastic.beats",
+    "description": "Filebeat is a ELASTIC beats component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Functionbeat",
+    "module": "diagrams.elastic.beats",
+    "description": "Functionbeat is a ELASTIC beats component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Heartbeat",
+    "module": "diagrams.elastic.beats",
+    "description": "Heartbeat is a ELASTIC beats component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Metricbeat",
+    "module": "diagrams.elastic.beats",
+    "description": "Metricbeat is a ELASTIC beats component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Alerting",
+    "module": "diagrams.elastic.elasticsearch",
+    "description": "Alerting is a ELASTIC elasticsearch component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Beats",
+    "module": "diagrams.elastic.elasticsearch",
+    "description": "Beats is a ELASTIC elasticsearch component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "ElasticSearch",
+    "module": "diagrams.elastic.elasticsearch",
+    "description": "ElasticSearch is a ELASTIC elasticsearch component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Elasticsearch",
+    "module": "diagrams.elastic.elasticsearch",
+    "description": "Elasticsearch is a ELASTIC elasticsearch component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Kibana",
+    "module": "diagrams.elastic.elasticsearch",
+    "description": "Kibana is a ELASTIC elasticsearch component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "AppSearch",
+    "module": "diagrams.elastic.enterprisesearch",
+    "description": "AppSearch is a ELASTIC enterprisesearch component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Crawler",
+    "module": "diagrams.elastic.enterprisesearch",
+    "description": "Crawler is a ELASTIC enterprisesearch component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "EnterpriseSearch",
+    "module": "diagrams.elastic.enterprisesearch",
+    "description": "EnterpriseSearch is a ELASTIC enterprisesearch component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "SiteSearch",
+    "module": "diagrams.elastic.enterprisesearch",
+    "description": "SiteSearch is a ELASTIC enterprisesearch component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "APM",
+    "module": "diagrams.elastic.observability",
+    "description": "APM is a ELASTIC observability component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Logs",
+    "module": "diagrams.elastic.observability",
+    "description": "Logs is a ELASTIC observability component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Metrics",
+    "module": "diagrams.elastic.observability",
+    "description": "Metrics is a ELASTIC observability component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Observability",
+    "module": "diagrams.elastic.observability",
+    "description": "Observability is a ELASTIC observability component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Uptime",
+    "module": "diagrams.elastic.observability",
+    "description": "Uptime is a ELASTIC observability component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "ECE",
+    "module": "diagrams.elastic.orchestration",
+    "description": "ECE is a ELASTIC orchestration component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "ECK",
+    "module": "diagrams.elastic.orchestration",
+    "description": "ECK is a ELASTIC orchestration component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Cloud",
+    "module": "diagrams.elastic.saas",
+    "description": "Cloud is a ELASTIC saas component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Elastic",
+    "module": "diagrams.elastic.saas",
+    "description": "Elastic is a ELASTIC saas component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Endpoint",
+    "module": "diagrams.elastic.security",
+    "description": "Endpoint is a ELASTIC security component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "SIEM",
+    "module": "diagrams.elastic.security",
+    "description": "SIEM is a ELASTIC security component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Security",
+    "module": "diagrams.elastic.security",
+    "description": "Security is a ELASTIC security component"
+  },
+  {
+    "type": "provider",
+    "provider": "elastic",
+    "component": "Xdr",
+    "module": "diagrams.elastic.security",
+    "description": "Xdr is a ELASTIC security component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "Firebase",
+    "module": "diagrams.firebase.base",
+    "description": "Firebase is a FIREBASE base component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "Authentication",
+    "module": "diagrams.firebase.develop",
+    "description": "Authentication is a FIREBASE develop component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "Firestore",
+    "module": "diagrams.firebase.develop",
+    "description": "Firestore is a FIREBASE develop component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "Functions",
+    "module": "diagrams.firebase.develop",
+    "description": "Functions is a FIREBASE develop component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "Hosting",
+    "module": "diagrams.firebase.develop",
+    "description": "Hosting is a FIREBASE develop component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "MLKit",
+    "module": "diagrams.firebase.develop",
+    "description": "MLKit is a FIREBASE develop component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "Extensions",
+    "module": "diagrams.firebase.extentions",
+    "description": "Extensions is a FIREBASE extentions component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "ABTesting",
+    "module": "diagrams.firebase.grow",
+    "description": "ABTesting is a FIREBASE grow component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "AppIndexing",
+    "module": "diagrams.firebase.grow",
+    "description": "AppIndexing is a FIREBASE grow component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "DynamicLinks",
+    "module": "diagrams.firebase.grow",
+    "description": "DynamicLinks is a FIREBASE grow component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "FCM",
+    "module": "diagrams.firebase.grow",
+    "description": "FCM is a FIREBASE grow component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "InAppMessaging",
+    "module": "diagrams.firebase.grow",
+    "description": "InAppMessaging is a FIREBASE grow component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "AppDistribution",
+    "module": "diagrams.firebase.quality",
+    "description": "AppDistribution is a FIREBASE quality component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "CrashReporting",
+    "module": "diagrams.firebase.quality",
+    "description": "CrashReporting is a FIREBASE quality component"
+  },
+  {
+    "type": "provider",
+    "provider": "firebase",
+    "component": "Crashlytics",
+    "module": "diagrams.firebase.quality",
+    "description": "Crashlytics is a FIREBASE quality component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "BigQuery",
+    "module": "diagrams.gcp.analytics",
+    "description": "BigQuery is a GCP analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Bigquery",
+    "module": "diagrams.gcp.analytics",
+    "description": "Bigquery is a GCP analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Composer",
+    "module": "diagrams.gcp.analytics",
+    "description": "Composer is a GCP analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "DataCatalog",
+    "module": "diagrams.gcp.analytics",
+    "description": "DataCatalog is a GCP analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "DataFusion",
+    "module": "diagrams.gcp.analytics",
+    "description": "DataFusion is a GCP analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Dataflow",
+    "module": "diagrams.gcp.analytics",
+    "description": "Dataflow is a GCP analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "APIGateway",
+    "module": "diagrams.gcp.api",
+    "description": "APIGateway is a GCP api component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Apigee",
+    "module": "diagrams.gcp.api",
+    "description": "Apigee is a GCP api component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Endpoints",
+    "module": "diagrams.gcp.api",
+    "description": "Endpoints is a GCP api component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "AppEngine",
+    "module": "diagrams.gcp.compute",
+    "description": "AppEngine is a GCP compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "ComputeEngine",
+    "module": "diagrams.gcp.compute",
+    "description": "ComputeEngine is a GCP compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "ContainerOptimizedOS",
+    "module": "diagrams.gcp.compute",
+    "description": "ContainerOptimizedOS is a GCP compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Functions",
+    "module": "diagrams.gcp.compute",
+    "description": "Functions is a GCP compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "GAE",
+    "module": "diagrams.gcp.compute",
+    "description": "GAE is a GCP compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "BigTable",
+    "module": "diagrams.gcp.database",
+    "description": "BigTable is a GCP database component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Bigtable",
+    "module": "diagrams.gcp.database",
+    "description": "Bigtable is a GCP database component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Datastore",
+    "module": "diagrams.gcp.database",
+    "description": "Datastore is a GCP database component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Firestore",
+    "module": "diagrams.gcp.database",
+    "description": "Firestore is a GCP database component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Memorystore",
+    "module": "diagrams.gcp.database",
+    "description": "Memorystore is a GCP database component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "SQL",
+    "module": "diagrams.gcp.database",
+    "description": "SQL is a GCP database component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Build",
+    "module": "diagrams.gcp.devtools",
+    "description": "Build is a GCP devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Code",
+    "module": "diagrams.gcp.devtools",
+    "description": "Code is a GCP devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "CodeForIntellij",
+    "module": "diagrams.gcp.devtools",
+    "description": "CodeForIntellij is a GCP devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "ContainerRegistry",
+    "module": "diagrams.gcp.devtools",
+    "description": "ContainerRegistry is a GCP devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "GCR",
+    "module": "diagrams.gcp.devtools",
+    "description": "GCR is a GCP devtools component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "IotCore",
+    "module": "diagrams.gcp.iot",
+    "description": "IotCore is a GCP iot component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "TransferAppliance",
+    "module": "diagrams.gcp.migration",
+    "description": "TransferAppliance is a GCP migration component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "AIHub",
+    "module": "diagrams.gcp.ml",
+    "description": "AIHub is a GCP ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "AIPlatform",
+    "module": "diagrams.gcp.ml",
+    "description": "AIPlatform is a GCP ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "AIPlatformDataLabelingService",
+    "module": "diagrams.gcp.ml",
+    "description": "AIPlatformDataLabelingService is a GCP ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "AdvancedSolutionsLab",
+    "module": "diagrams.gcp.ml",
+    "description": "AdvancedSolutionsLab is a GCP ml component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Armor",
+    "module": "diagrams.gcp.network",
+    "description": "Armor is a GCP network component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "CDN",
+    "module": "diagrams.gcp.network",
+    "description": "CDN is a GCP network component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "DNS",
+    "module": "diagrams.gcp.network",
+    "description": "DNS is a GCP network component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "DedicatedInterconnect",
+    "module": "diagrams.gcp.network",
+    "description": "DedicatedInterconnect is a GCP network component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "ExternalIpAddresses",
+    "module": "diagrams.gcp.network",
+    "description": "ExternalIpAddresses is a GCP network component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Logging",
+    "module": "diagrams.gcp.operations",
+    "description": "Logging is a GCP operations component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Monitoring",
+    "module": "diagrams.gcp.operations",
+    "description": "Monitoring is a GCP operations component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "IAP",
+    "module": "diagrams.gcp.security",
+    "description": "IAP is a GCP security component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Iam",
+    "module": "diagrams.gcp.security",
+    "description": "Iam is a GCP security component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "KMS",
+    "module": "diagrams.gcp.security",
+    "description": "KMS is a GCP security component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "KeyManagementService",
+    "module": "diagrams.gcp.security",
+    "description": "KeyManagementService is a GCP security component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "ResourceManager",
+    "module": "diagrams.gcp.security",
+    "description": "ResourceManager is a GCP security component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "SCC",
+    "module": "diagrams.gcp.security",
+    "description": "SCC is a GCP security component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Filestore",
+    "module": "diagrams.gcp.storage",
+    "description": "Filestore is a GCP storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "GCS",
+    "module": "diagrams.gcp.storage",
+    "description": "GCS is a GCP storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "PersistentDisk",
+    "module": "diagrams.gcp.storage",
+    "description": "PersistentDisk is a GCP storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "gcp",
+    "component": "Storage",
+    "module": "diagrams.gcp.storage",
+    "description": "Storage is a GCP storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Blank",
+    "module": "diagrams.generic.blank",
+    "description": "Blank is a GENERIC blank component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Rack",
+    "module": "diagrams.generic.compute",
+    "description": "Rack is a GENERIC compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "SQL",
+    "module": "diagrams.generic.database",
+    "description": "SQL is a GENERIC database component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Mobile",
+    "module": "diagrams.generic.device",
+    "description": "Mobile is a GENERIC device component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Tablet",
+    "module": "diagrams.generic.device",
+    "description": "Tablet is a GENERIC device component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Firewall",
+    "module": "diagrams.generic.network",
+    "description": "Firewall is a GENERIC network component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Router",
+    "module": "diagrams.generic.network",
+    "description": "Router is a GENERIC network component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Subnet",
+    "module": "diagrams.generic.network",
+    "description": "Subnet is a GENERIC network component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Switch",
+    "module": "diagrams.generic.network",
+    "description": "Switch is a GENERIC network component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "VPN",
+    "module": "diagrams.generic.network",
+    "description": "VPN is a GENERIC network component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Android",
+    "module": "diagrams.generic.os",
+    "description": "Android is a GENERIC os component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Centos",
+    "module": "diagrams.generic.os",
+    "description": "Centos is a GENERIC os component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Debian",
+    "module": "diagrams.generic.os",
+    "description": "Debian is a GENERIC os component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "IOS",
+    "module": "diagrams.generic.os",
+    "description": "IOS is a GENERIC os component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "LinuxGeneral",
+    "module": "diagrams.generic.os",
+    "description": "LinuxGeneral is a GENERIC os component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Raspbian",
+    "module": "diagrams.generic.os",
+    "description": "Raspbian is a GENERIC os component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "RedHat",
+    "module": "diagrams.generic.os",
+    "description": "RedHat is a GENERIC os component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Suse",
+    "module": "diagrams.generic.os",
+    "description": "Suse is a GENERIC os component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Datacenter",
+    "module": "diagrams.generic.place",
+    "description": "Datacenter is a GENERIC place component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Storage",
+    "module": "diagrams.generic.storage",
+    "description": "Storage is a GENERIC storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Qemu",
+    "module": "diagrams.generic.virtualization",
+    "description": "Qemu is a GENERIC virtualization component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Virtualbox",
+    "module": "diagrams.generic.virtualization",
+    "description": "Virtualbox is a GENERIC virtualization component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "Vmware",
+    "module": "diagrams.generic.virtualization",
+    "description": "Vmware is a GENERIC virtualization component"
+  },
+  {
+    "type": "provider",
+    "provider": "generic",
+    "component": "XEN",
+    "module": "diagrams.generic.virtualization",
+    "description": "XEN is a GENERIC virtualization component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Analytics",
+    "module": "diagrams.ibm.analytics",
+    "description": "Analytics is a IBM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "DataIntegration",
+    "module": "diagrams.ibm.analytics",
+    "description": "DataIntegration is a IBM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "DataRepositories",
+    "module": "diagrams.ibm.analytics",
+    "description": "DataRepositories is a IBM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "DeviceAnalytics",
+    "module": "diagrams.ibm.analytics",
+    "description": "DeviceAnalytics is a IBM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "ActionableInsight",
+    "module": "diagrams.ibm.applications",
+    "description": "ActionableInsight is a IBM applications component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Annotate",
+    "module": "diagrams.ibm.applications",
+    "description": "Annotate is a IBM applications component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "ApiDeveloperPortal",
+    "module": "diagrams.ibm.applications",
+    "description": "ApiDeveloperPortal is a IBM applications component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Blockchain",
+    "module": "diagrams.ibm.blockchain",
+    "description": "Blockchain is a IBM blockchain component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "BlockchainDeveloper",
+    "module": "diagrams.ibm.blockchain",
+    "description": "BlockchainDeveloper is a IBM blockchain component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "CertificateAuthority",
+    "module": "diagrams.ibm.blockchain",
+    "description": "CertificateAuthority is a IBM blockchain component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "BareMetalServer",
+    "module": "diagrams.ibm.compute",
+    "description": "BareMetalServer is a IBM compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "ImageService",
+    "module": "diagrams.ibm.compute",
+    "description": "ImageService is a IBM compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Instance",
+    "module": "diagrams.ibm.compute",
+    "description": "Instance is a IBM compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Key",
+    "module": "diagrams.ibm.compute",
+    "description": "Key is a IBM compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "PowerInstance",
+    "module": "diagrams.ibm.compute",
+    "description": "PowerInstance is a IBM compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Caches",
+    "module": "diagrams.ibm.data",
+    "description": "Caches is a IBM data component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Cloud",
+    "module": "diagrams.ibm.data",
+    "description": "Cloud is a IBM data component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "ConversationTrainedDeployed",
+    "module": "diagrams.ibm.data",
+    "description": "ConversationTrainedDeployed is a IBM data component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "DataServices",
+    "module": "diagrams.ibm.data",
+    "description": "DataServices is a IBM data component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "DataSources",
+    "module": "diagrams.ibm.data",
+    "description": "DataSources is a IBM data component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "ArtifactManagement",
+    "module": "diagrams.ibm.devops",
+    "description": "ArtifactManagement is a IBM devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "BuildTest",
+    "module": "diagrams.ibm.devops",
+    "description": "BuildTest is a IBM devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "CodeEditor",
+    "module": "diagrams.ibm.devops",
+    "description": "CodeEditor is a IBM devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "CollaborativeDevelopment",
+    "module": "diagrams.ibm.devops",
+    "description": "CollaborativeDevelopment is a IBM devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "CloudMessaging",
+    "module": "diagrams.ibm.general",
+    "description": "CloudMessaging is a IBM general component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "CloudServices",
+    "module": "diagrams.ibm.general",
+    "description": "CloudServices is a IBM general component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Cloudant",
+    "module": "diagrams.ibm.general",
+    "description": "Cloudant is a IBM general component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "CognitiveServices",
+    "module": "diagrams.ibm.general",
+    "description": "CognitiveServices is a IBM general component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Channels",
+    "module": "diagrams.ibm.infrastructure",
+    "description": "Channels is a IBM infrastructure component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "CloudMessaging",
+    "module": "diagrams.ibm.infrastructure",
+    "description": "CloudMessaging is a IBM infrastructure component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Dashboard",
+    "module": "diagrams.ibm.infrastructure",
+    "description": "Dashboard is a IBM infrastructure component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Diagnostics",
+    "module": "diagrams.ibm.infrastructure",
+    "description": "Diagnostics is a IBM infrastructure component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "AlertNotification",
+    "module": "diagrams.ibm.management",
+    "description": "AlertNotification is a IBM management component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "ApiManagement",
+    "module": "diagrams.ibm.management",
+    "description": "ApiManagement is a IBM management component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "CloudManagement",
+    "module": "diagrams.ibm.management",
+    "description": "CloudManagement is a IBM management component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Bridge",
+    "module": "diagrams.ibm.network",
+    "description": "Bridge is a IBM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "DirectLink",
+    "module": "diagrams.ibm.network",
+    "description": "DirectLink is a IBM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Enterprise",
+    "module": "diagrams.ibm.network",
+    "description": "Enterprise is a IBM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Firewall",
+    "module": "diagrams.ibm.network",
+    "description": "Firewall is a IBM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "FloatingIp",
+    "module": "diagrams.ibm.network",
+    "description": "FloatingIp is a IBM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Gateway",
+    "module": "diagrams.ibm.network",
+    "description": "Gateway is a IBM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "ApiSecurity",
+    "module": "diagrams.ibm.security",
+    "description": "ApiSecurity is a IBM security component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "BlockchainSecurityService",
+    "module": "diagrams.ibm.security",
+    "description": "BlockchainSecurityService is a IBM security component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "DataSecurity",
+    "module": "diagrams.ibm.security",
+    "description": "DataSecurity is a IBM security component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Firewall",
+    "module": "diagrams.ibm.security",
+    "description": "Firewall is a IBM security component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Communities",
+    "module": "diagrams.ibm.social",
+    "description": "Communities is a IBM social component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "FileSync",
+    "module": "diagrams.ibm.social",
+    "description": "FileSync is a IBM social component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "LiveCollaboration",
+    "module": "diagrams.ibm.social",
+    "description": "LiveCollaboration is a IBM social component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Messaging",
+    "module": "diagrams.ibm.social",
+    "description": "Messaging is a IBM social component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Networking",
+    "module": "diagrams.ibm.social",
+    "description": "Networking is a IBM social component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "BlockStorage",
+    "module": "diagrams.ibm.storage",
+    "description": "BlockStorage is a IBM storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "ObjectStorage",
+    "module": "diagrams.ibm.storage",
+    "description": "ObjectStorage is a IBM storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Browser",
+    "module": "diagrams.ibm.user",
+    "description": "Browser is a IBM user component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Device",
+    "module": "diagrams.ibm.user",
+    "description": "Device is a IBM user component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "IntegratedDigitalExperiences",
+    "module": "diagrams.ibm.user",
+    "description": "IntegratedDigitalExperiences is a IBM user component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "PhysicalEntity",
+    "module": "diagrams.ibm.user",
+    "description": "PhysicalEntity is a IBM user component"
+  },
+  {
+    "type": "provider",
+    "provider": "ibm",
+    "component": "Sensor",
+    "module": "diagrams.ibm.user",
+    "description": "Sensor is a IBM user component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "ChaosMesh",
+    "module": "diagrams.k8s.chaos",
+    "description": "ChaosMesh is a K8S chaos component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "LitmusChaos",
+    "module": "diagrams.k8s.chaos",
+    "description": "LitmusChaos is a K8S chaos component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "HPA",
+    "module": "diagrams.k8s.clusterconfig",
+    "description": "HPA is a K8S clusterconfig component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "HorizontalPodAutoscaler",
+    "module": "diagrams.k8s.clusterconfig",
+    "description": "HorizontalPodAutoscaler is a K8S clusterconfig component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "LimitRange",
+    "module": "diagrams.k8s.clusterconfig",
+    "description": "LimitRange is a K8S clusterconfig component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Limits",
+    "module": "diagrams.k8s.clusterconfig",
+    "description": "Limits is a K8S clusterconfig component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Quota",
+    "module": "diagrams.k8s.clusterconfig",
+    "description": "Quota is a K8S clusterconfig component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Cronjob",
+    "module": "diagrams.k8s.compute",
+    "description": "Cronjob is a K8S compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "DS",
+    "module": "diagrams.k8s.compute",
+    "description": "DS is a K8S compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "DaemonSet",
+    "module": "diagrams.k8s.compute",
+    "description": "DaemonSet is a K8S compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Deploy",
+    "module": "diagrams.k8s.compute",
+    "description": "Deploy is a K8S compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Deployment",
+    "module": "diagrams.k8s.compute",
+    "description": "Deployment is a K8S compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Job",
+    "module": "diagrams.k8s.compute",
+    "description": "Job is a K8S compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Pod",
+    "module": "diagrams.k8s.compute",
+    "description": "Pod is a K8S compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "RS",
+    "module": "diagrams.k8s.compute",
+    "description": "RS is a K8S compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "API",
+    "module": "diagrams.k8s.controlplane",
+    "description": "API is a K8S controlplane component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "APIServer",
+    "module": "diagrams.k8s.controlplane",
+    "description": "APIServer is a K8S controlplane component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "CCM",
+    "module": "diagrams.k8s.controlplane",
+    "description": "CCM is a K8S controlplane component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "CM",
+    "module": "diagrams.k8s.controlplane",
+    "description": "CM is a K8S controlplane component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "ControllerManager",
+    "module": "diagrams.k8s.controlplane",
+    "description": "ControllerManager is a K8S controlplane component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "KProxy",
+    "module": "diagrams.k8s.controlplane",
+    "description": "KProxy is a K8S controlplane component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "KubeProxy",
+    "module": "diagrams.k8s.controlplane",
+    "description": "KubeProxy is a K8S controlplane component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "ExternalDns",
+    "module": "diagrams.k8s.ecosystem",
+    "description": "ExternalDns is a K8S ecosystem component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Helm",
+    "module": "diagrams.k8s.ecosystem",
+    "description": "Helm is a K8S ecosystem component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Krew",
+    "module": "diagrams.k8s.ecosystem",
+    "description": "Krew is a K8S ecosystem component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Kustomize",
+    "module": "diagrams.k8s.ecosystem",
+    "description": "Kustomize is a K8S ecosystem component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "NS",
+    "module": "diagrams.k8s.group",
+    "description": "NS is a K8S group component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Namespace",
+    "module": "diagrams.k8s.group",
+    "description": "Namespace is a K8S group component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "ETCD",
+    "module": "diagrams.k8s.infra",
+    "description": "ETCD is a K8S infra component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Master",
+    "module": "diagrams.k8s.infra",
+    "description": "Master is a K8S infra component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Node",
+    "module": "diagrams.k8s.infra",
+    "description": "Node is a K8S infra component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Endpoint",
+    "module": "diagrams.k8s.network",
+    "description": "Endpoint is a K8S network component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Ep",
+    "module": "diagrams.k8s.network",
+    "description": "Ep is a K8S network component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Ing",
+    "module": "diagrams.k8s.network",
+    "description": "Ing is a K8S network component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Ingress",
+    "module": "diagrams.k8s.network",
+    "description": "Ingress is a K8S network component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Netpol",
+    "module": "diagrams.k8s.network",
+    "description": "Netpol is a K8S network component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "NetworkPolicy",
+    "module": "diagrams.k8s.network",
+    "description": "NetworkPolicy is a K8S network component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "SVC",
+    "module": "diagrams.k8s.network",
+    "description": "SVC is a K8S network component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Service",
+    "module": "diagrams.k8s.network",
+    "description": "Service is a K8S network component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "CRD",
+    "module": "diagrams.k8s.others",
+    "description": "CRD is a K8S others component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "PSP",
+    "module": "diagrams.k8s.others",
+    "description": "PSP is a K8S others component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "CM",
+    "module": "diagrams.k8s.podconfig",
+    "description": "CM is a K8S podconfig component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "ConfigMap",
+    "module": "diagrams.k8s.podconfig",
+    "description": "ConfigMap is a K8S podconfig component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Secret",
+    "module": "diagrams.k8s.podconfig",
+    "description": "Secret is a K8S podconfig component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "CRB",
+    "module": "diagrams.k8s.rbac",
+    "description": "CRB is a K8S rbac component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "CRole",
+    "module": "diagrams.k8s.rbac",
+    "description": "CRole is a K8S rbac component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "ClusterRole",
+    "module": "diagrams.k8s.rbac",
+    "description": "ClusterRole is a K8S rbac component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "ClusterRoleBinding",
+    "module": "diagrams.k8s.rbac",
+    "description": "ClusterRoleBinding is a K8S rbac component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Group",
+    "module": "diagrams.k8s.rbac",
+    "description": "Group is a K8S rbac component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "RB",
+    "module": "diagrams.k8s.rbac",
+    "description": "RB is a K8S rbac component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "Role",
+    "module": "diagrams.k8s.rbac",
+    "description": "Role is a K8S rbac component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "PV",
+    "module": "diagrams.k8s.storage",
+    "description": "PV is a K8S storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "PVC",
+    "module": "diagrams.k8s.storage",
+    "description": "PVC is a K8S storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "PersistentVolume",
+    "module": "diagrams.k8s.storage",
+    "description": "PersistentVolume is a K8S storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "PersistentVolumeClaim",
+    "module": "diagrams.k8s.storage",
+    "description": "PersistentVolumeClaim is a K8S storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "SC",
+    "module": "diagrams.k8s.storage",
+    "description": "SC is a K8S storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "k8s",
+    "component": "StorageClass",
+    "module": "diagrams.k8s.storage",
+    "description": "StorageClass is a K8S storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Autoscale",
+    "module": "diagrams.oci.compute",
+    "description": "Autoscale is a OCI compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "AutoscaleWhite",
+    "module": "diagrams.oci.compute",
+    "description": "AutoscaleWhite is a OCI compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BM",
+    "module": "diagrams.oci.compute",
+    "description": "BM is a OCI compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BMWhite",
+    "module": "diagrams.oci.compute",
+    "description": "BMWhite is a OCI compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BareMetal",
+    "module": "diagrams.oci.compute",
+    "description": "BareMetal is a OCI compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BareMetalWhite",
+    "module": "diagrams.oci.compute",
+    "description": "BareMetalWhite is a OCI compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Backbone",
+    "module": "diagrams.oci.connectivity",
+    "description": "Backbone is a OCI connectivity component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BackboneWhite",
+    "module": "diagrams.oci.connectivity",
+    "description": "BackboneWhite is a OCI connectivity component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "CDN",
+    "module": "diagrams.oci.connectivity",
+    "description": "CDN is a OCI connectivity component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "CDNWhite",
+    "module": "diagrams.oci.connectivity",
+    "description": "CDNWhite is a OCI connectivity component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "CustomerDatacenter",
+    "module": "diagrams.oci.connectivity",
+    "description": "CustomerDatacenter is a OCI connectivity component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "ADB",
+    "module": "diagrams.oci.database",
+    "description": "ADB is a OCI database component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "ADBWhite",
+    "module": "diagrams.oci.database",
+    "description": "ADBWhite is a OCI database component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Autonomous",
+    "module": "diagrams.oci.database",
+    "description": "Autonomous is a OCI database component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "AutonomousWhite",
+    "module": "diagrams.oci.database",
+    "description": "AutonomousWhite is a OCI database component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BigdataService",
+    "module": "diagrams.oci.database",
+    "description": "BigdataService is a OCI database component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "APIGateway",
+    "module": "diagrams.oci.devops",
+    "description": "APIGateway is a OCI devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "APIGatewayWhite",
+    "module": "diagrams.oci.devops",
+    "description": "APIGatewayWhite is a OCI devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "APIService",
+    "module": "diagrams.oci.devops",
+    "description": "APIService is a OCI devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "APIServiceWhite",
+    "module": "diagrams.oci.devops",
+    "description": "APIServiceWhite is a OCI devops component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Audit",
+    "module": "diagrams.oci.governance",
+    "description": "Audit is a OCI governance component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "AuditWhite",
+    "module": "diagrams.oci.governance",
+    "description": "AuditWhite is a OCI governance component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Compartments",
+    "module": "diagrams.oci.governance",
+    "description": "Compartments is a OCI governance component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "CompartmentsWhite",
+    "module": "diagrams.oci.governance",
+    "description": "CompartmentsWhite is a OCI governance component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Groups",
+    "module": "diagrams.oci.governance",
+    "description": "Groups is a OCI governance component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Alarm",
+    "module": "diagrams.oci.monitoring",
+    "description": "Alarm is a OCI monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "AlarmWhite",
+    "module": "diagrams.oci.monitoring",
+    "description": "AlarmWhite is a OCI monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Email",
+    "module": "diagrams.oci.monitoring",
+    "description": "Email is a OCI monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "EmailWhite",
+    "module": "diagrams.oci.monitoring",
+    "description": "EmailWhite is a OCI monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Events",
+    "module": "diagrams.oci.monitoring",
+    "description": "Events is a OCI monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "EventsWhite",
+    "module": "diagrams.oci.monitoring",
+    "description": "EventsWhite is a OCI monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Drg",
+    "module": "diagrams.oci.network",
+    "description": "Drg is a OCI network component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "DrgWhite",
+    "module": "diagrams.oci.network",
+    "description": "DrgWhite is a OCI network component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Firewall",
+    "module": "diagrams.oci.network",
+    "description": "Firewall is a OCI network component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "FirewallWhite",
+    "module": "diagrams.oci.network",
+    "description": "FirewallWhite is a OCI network component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "InternetGateway",
+    "module": "diagrams.oci.network",
+    "description": "InternetGateway is a OCI network component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "CloudGuard",
+    "module": "diagrams.oci.security",
+    "description": "CloudGuard is a OCI security component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "CloudGuardWhite",
+    "module": "diagrams.oci.security",
+    "description": "CloudGuardWhite is a OCI security component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "DDOS",
+    "module": "diagrams.oci.security",
+    "description": "DDOS is a OCI security component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "DDOSWhite",
+    "module": "diagrams.oci.security",
+    "description": "DDOSWhite is a OCI security component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "Encryption",
+    "module": "diagrams.oci.security",
+    "description": "Encryption is a OCI security component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BackupRestore",
+    "module": "diagrams.oci.storage",
+    "description": "BackupRestore is a OCI storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BackupRestoreWhite",
+    "module": "diagrams.oci.storage",
+    "description": "BackupRestoreWhite is a OCI storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BlockStorage",
+    "module": "diagrams.oci.storage",
+    "description": "BlockStorage is a OCI storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "oci",
+    "component": "BlockStorageClone",
+    "module": "diagrams.oci.storage",
+    "description": "BlockStorageClone is a OCI storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Fluentd",
+    "module": "diagrams.onprem.aggregator",
+    "description": "Fluentd is a ONPREM aggregator component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Vector",
+    "module": "diagrams.onprem.aggregator",
+    "description": "Vector is a ONPREM aggregator component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Beam",
+    "module": "diagrams.onprem.analytics",
+    "description": "Beam is a ONPREM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Databricks",
+    "module": "diagrams.onprem.analytics",
+    "description": "Databricks is a ONPREM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Dbt",
+    "module": "diagrams.onprem.analytics",
+    "description": "Dbt is a ONPREM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Dremio",
+    "module": "diagrams.onprem.analytics",
+    "description": "Dremio is a ONPREM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Flink",
+    "module": "diagrams.onprem.analytics",
+    "description": "Flink is a ONPREM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Hadoop",
+    "module": "diagrams.onprem.analytics",
+    "description": "Hadoop is a ONPREM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Hive",
+    "module": "diagrams.onprem.analytics",
+    "description": "Hive is a ONPREM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Metabase",
+    "module": "diagrams.onprem.analytics",
+    "description": "Metabase is a ONPREM analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Boundary",
+    "module": "diagrams.onprem.auth",
+    "description": "Boundary is a ONPREM auth component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "BuzzfeedSso",
+    "module": "diagrams.onprem.auth",
+    "description": "BuzzfeedSso is a ONPREM auth component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Oauth2Proxy",
+    "module": "diagrams.onprem.auth",
+    "description": "Oauth2Proxy is a ONPREM auth component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Spinnaker",
+    "module": "diagrams.onprem.cd",
+    "description": "Spinnaker is a ONPREM cd component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Tekton",
+    "module": "diagrams.onprem.cd",
+    "description": "Tekton is a ONPREM cd component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "TektonCli",
+    "module": "diagrams.onprem.cd",
+    "description": "TektonCli is a ONPREM cd component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "CertManager",
+    "module": "diagrams.onprem.certificates",
+    "description": "CertManager is a ONPREM certificates component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "LetsEncrypt",
+    "module": "diagrams.onprem.certificates",
+    "description": "LetsEncrypt is a ONPREM certificates component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "CircleCI",
+    "module": "diagrams.onprem.ci",
+    "description": "CircleCI is a ONPREM ci component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Circleci",
+    "module": "diagrams.onprem.ci",
+    "description": "Circleci is a ONPREM ci component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "ConcourseCI",
+    "module": "diagrams.onprem.ci",
+    "description": "ConcourseCI is a ONPREM ci component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Concourseci",
+    "module": "diagrams.onprem.ci",
+    "description": "Concourseci is a ONPREM ci component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "DroneCI",
+    "module": "diagrams.onprem.ci",
+    "description": "DroneCI is a ONPREM ci component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Droneci",
+    "module": "diagrams.onprem.ci",
+    "description": "Droneci is a ONPREM ci component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Client",
+    "module": "diagrams.onprem.client",
+    "description": "Client is a ONPREM client component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "User",
+    "module": "diagrams.onprem.client",
+    "description": "User is a ONPREM client component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Users",
+    "module": "diagrams.onprem.client",
+    "description": "Users is a ONPREM client component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Nomad",
+    "module": "diagrams.onprem.compute",
+    "description": "Nomad is a ONPREM compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Server",
+    "module": "diagrams.onprem.compute",
+    "description": "Server is a ONPREM compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Containerd",
+    "module": "diagrams.onprem.container",
+    "description": "Containerd is a ONPREM container component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Crio",
+    "module": "diagrams.onprem.container",
+    "description": "Crio is a ONPREM container component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Docker",
+    "module": "diagrams.onprem.container",
+    "description": "Docker is a ONPREM container component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Firecracker",
+    "module": "diagrams.onprem.container",
+    "description": "Firecracker is a ONPREM container component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Gvisor",
+    "module": "diagrams.onprem.container",
+    "description": "Gvisor is a ONPREM container component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "K3S",
+    "module": "diagrams.onprem.container",
+    "description": "K3S is a ONPREM container component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "LXC",
+    "module": "diagrams.onprem.container",
+    "description": "LXC is a ONPREM container component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Lxc",
+    "module": "diagrams.onprem.container",
+    "description": "Lxc is a ONPREM container component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Cassandra",
+    "module": "diagrams.onprem.database",
+    "description": "Cassandra is a ONPREM database component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "ClickHouse",
+    "module": "diagrams.onprem.database",
+    "description": "ClickHouse is a ONPREM database component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Clickhouse",
+    "module": "diagrams.onprem.database",
+    "description": "Clickhouse is a ONPREM database component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "CockroachDB",
+    "module": "diagrams.onprem.database",
+    "description": "CockroachDB is a ONPREM database component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Cockroachdb",
+    "module": "diagrams.onprem.database",
+    "description": "Cockroachdb is a ONPREM database component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Coredns",
+    "module": "diagrams.onprem.dns",
+    "description": "Coredns is a ONPREM dns component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Powerdns",
+    "module": "diagrams.onprem.dns",
+    "description": "Powerdns is a ONPREM dns component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Embulk",
+    "module": "diagrams.onprem.etl",
+    "description": "Embulk is a ONPREM etl component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "ArgoCD",
+    "module": "diagrams.onprem.gitops",
+    "description": "ArgoCD is a ONPREM gitops component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Argocd",
+    "module": "diagrams.onprem.gitops",
+    "description": "Argocd is a ONPREM gitops component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Flagger",
+    "module": "diagrams.onprem.gitops",
+    "description": "Flagger is a ONPREM gitops component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Flux",
+    "module": "diagrams.onprem.gitops",
+    "description": "Flux is a ONPREM gitops component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Nextcloud",
+    "module": "diagrams.onprem.groupware",
+    "description": "Nextcloud is a ONPREM groupware component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Ansible",
+    "module": "diagrams.onprem.iac",
+    "description": "Ansible is a ONPREM iac component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Atlantis",
+    "module": "diagrams.onprem.iac",
+    "description": "Atlantis is a ONPREM iac component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Awx",
+    "module": "diagrams.onprem.iac",
+    "description": "Awx is a ONPREM iac component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Puppet",
+    "module": "diagrams.onprem.iac",
+    "description": "Puppet is a ONPREM iac component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Terraform",
+    "module": "diagrams.onprem.iac",
+    "description": "Terraform is a ONPREM iac component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Dex",
+    "module": "diagrams.onprem.identity",
+    "description": "Dex is a ONPREM identity component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Aerospike",
+    "module": "diagrams.onprem.inmemory",
+    "description": "Aerospike is a ONPREM inmemory component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Hazelcast",
+    "module": "diagrams.onprem.inmemory",
+    "description": "Hazelcast is a ONPREM inmemory component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Memcached",
+    "module": "diagrams.onprem.inmemory",
+    "description": "Memcached is a ONPREM inmemory component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Redis",
+    "module": "diagrams.onprem.inmemory",
+    "description": "Redis is a ONPREM inmemory component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "FluentBit",
+    "module": "diagrams.onprem.logging",
+    "description": "FluentBit is a ONPREM logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Fluentbit",
+    "module": "diagrams.onprem.logging",
+    "description": "Fluentbit is a ONPREM logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Graylog",
+    "module": "diagrams.onprem.logging",
+    "description": "Graylog is a ONPREM logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Loki",
+    "module": "diagrams.onprem.logging",
+    "description": "Loki is a ONPREM logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "RSyslog",
+    "module": "diagrams.onprem.logging",
+    "description": "RSyslog is a ONPREM logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Rsyslog",
+    "module": "diagrams.onprem.logging",
+    "description": "Rsyslog is a ONPREM logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "SyslogNg",
+    "module": "diagrams.onprem.logging",
+    "description": "SyslogNg is a ONPREM logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Centrifugo",
+    "module": "diagrams.onprem.messaging",
+    "description": "Centrifugo is a ONPREM messaging component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Mlflow",
+    "module": "diagrams.onprem.mlops",
+    "description": "Mlflow is a ONPREM mlops component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Polyaxon",
+    "module": "diagrams.onprem.mlops",
+    "description": "Polyaxon is a ONPREM mlops component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Cortex",
+    "module": "diagrams.onprem.monitoring",
+    "description": "Cortex is a ONPREM monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Datadog",
+    "module": "diagrams.onprem.monitoring",
+    "description": "Datadog is a ONPREM monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Dynatrace",
+    "module": "diagrams.onprem.monitoring",
+    "description": "Dynatrace is a ONPREM monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Grafana",
+    "module": "diagrams.onprem.monitoring",
+    "description": "Grafana is a ONPREM monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Humio",
+    "module": "diagrams.onprem.monitoring",
+    "description": "Humio is a ONPREM monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Mimir",
+    "module": "diagrams.onprem.monitoring",
+    "description": "Mimir is a ONPREM monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Nagios",
+    "module": "diagrams.onprem.monitoring",
+    "description": "Nagios is a ONPREM monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Ambassador",
+    "module": "diagrams.onprem.network",
+    "description": "Ambassador is a ONPREM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Apache",
+    "module": "diagrams.onprem.network",
+    "description": "Apache is a ONPREM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Bind9",
+    "module": "diagrams.onprem.network",
+    "description": "Bind9 is a ONPREM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Caddy",
+    "module": "diagrams.onprem.network",
+    "description": "Caddy is a ONPREM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Consul",
+    "module": "diagrams.onprem.network",
+    "description": "Consul is a ONPREM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "ETCD",
+    "module": "diagrams.onprem.network",
+    "description": "ETCD is a ONPREM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Envoy",
+    "module": "diagrams.onprem.network",
+    "description": "Envoy is a ONPREM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Etcd",
+    "module": "diagrams.onprem.network",
+    "description": "Etcd is a ONPREM network component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "ProxmoxVE",
+    "module": "diagrams.onprem.proxmox",
+    "description": "ProxmoxVE is a ONPREM proxmox component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Pve",
+    "module": "diagrams.onprem.proxmox",
+    "description": "Pve is a ONPREM proxmox component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "ActiveMQ",
+    "module": "diagrams.onprem.queue",
+    "description": "ActiveMQ is a ONPREM queue component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Activemq",
+    "module": "diagrams.onprem.queue",
+    "description": "Activemq is a ONPREM queue component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Celery",
+    "module": "diagrams.onprem.queue",
+    "description": "Celery is a ONPREM queue component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "EMQX",
+    "module": "diagrams.onprem.queue",
+    "description": "EMQX is a ONPREM queue component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Emqx",
+    "module": "diagrams.onprem.queue",
+    "description": "Emqx is a ONPREM queue component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Kafka",
+    "module": "diagrams.onprem.queue",
+    "description": "Kafka is a ONPREM queue component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Nats",
+    "module": "diagrams.onprem.queue",
+    "description": "Nats is a ONPREM queue component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "RabbitMQ",
+    "module": "diagrams.onprem.queue",
+    "description": "RabbitMQ is a ONPREM queue component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Harbor",
+    "module": "diagrams.onprem.registry",
+    "description": "Harbor is a ONPREM registry component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Jfrog",
+    "module": "diagrams.onprem.registry",
+    "description": "Jfrog is a ONPREM registry component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Solr",
+    "module": "diagrams.onprem.search",
+    "description": "Solr is a ONPREM search component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Bitwarden",
+    "module": "diagrams.onprem.security",
+    "description": "Bitwarden is a ONPREM security component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Trivy",
+    "module": "diagrams.onprem.security",
+    "description": "Trivy is a ONPREM security component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Vault",
+    "module": "diagrams.onprem.security",
+    "description": "Vault is a ONPREM security component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "CEPH",
+    "module": "diagrams.onprem.storage",
+    "description": "CEPH is a ONPREM storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "CEPH_OSD",
+    "module": "diagrams.onprem.storage",
+    "description": "CEPH_OSD is a ONPREM storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Ceph",
+    "module": "diagrams.onprem.storage",
+    "description": "Ceph is a ONPREM storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "CephOsd",
+    "module": "diagrams.onprem.storage",
+    "description": "CephOsd is a ONPREM storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Glusterfs",
+    "module": "diagrams.onprem.storage",
+    "description": "Glusterfs is a ONPREM storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Portworx",
+    "module": "diagrams.onprem.storage",
+    "description": "Portworx is a ONPREM storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Jaeger",
+    "module": "diagrams.onprem.tracing",
+    "description": "Jaeger is a ONPREM tracing component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Tempo",
+    "module": "diagrams.onprem.tracing",
+    "description": "Tempo is a ONPREM tracing component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Git",
+    "module": "diagrams.onprem.vcs",
+    "description": "Git is a ONPREM vcs component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Gitea",
+    "module": "diagrams.onprem.vcs",
+    "description": "Gitea is a ONPREM vcs component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Github",
+    "module": "diagrams.onprem.vcs",
+    "description": "Github is a ONPREM vcs component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Gitlab",
+    "module": "diagrams.onprem.vcs",
+    "description": "Gitlab is a ONPREM vcs component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Svn",
+    "module": "diagrams.onprem.vcs",
+    "description": "Svn is a ONPREM vcs component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Airflow",
+    "module": "diagrams.onprem.workflow",
+    "description": "Airflow is a ONPREM workflow component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Digdag",
+    "module": "diagrams.onprem.workflow",
+    "description": "Digdag is a ONPREM workflow component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "KubeFlow",
+    "module": "diagrams.onprem.workflow",
+    "description": "KubeFlow is a ONPREM workflow component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Kubeflow",
+    "module": "diagrams.onprem.workflow",
+    "description": "Kubeflow is a ONPREM workflow component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "NiFi",
+    "module": "diagrams.onprem.workflow",
+    "description": "NiFi is a ONPREM workflow component"
+  },
+  {
+    "type": "provider",
+    "provider": "onprem",
+    "component": "Nifi",
+    "module": "diagrams.onprem.workflow",
+    "description": "Nifi is a ONPREM workflow component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "EC2API",
+    "module": "diagrams.openstack.apiproxies",
+    "description": "EC2API is a OPENSTACK apiproxies component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Freezer",
+    "module": "diagrams.openstack.applicationlifecycle",
+    "description": "Freezer is a OPENSTACK applicationlifecycle component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Masakari",
+    "module": "diagrams.openstack.applicationlifecycle",
+    "description": "Masakari is a OPENSTACK applicationlifecycle component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Murano",
+    "module": "diagrams.openstack.applicationlifecycle",
+    "description": "Murano is a OPENSTACK applicationlifecycle component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Solum",
+    "module": "diagrams.openstack.applicationlifecycle",
+    "description": "Solum is a OPENSTACK applicationlifecycle component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Cyborg",
+    "module": "diagrams.openstack.baremetal",
+    "description": "Cyborg is a OPENSTACK baremetal component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Ironic",
+    "module": "diagrams.openstack.baremetal",
+    "description": "Ironic is a OPENSTACK baremetal component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "CloudKitty",
+    "module": "diagrams.openstack.billing",
+    "description": "CloudKitty is a OPENSTACK billing component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Cloudkitty",
+    "module": "diagrams.openstack.billing",
+    "description": "Cloudkitty is a OPENSTACK billing component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Nova",
+    "module": "diagrams.openstack.compute",
+    "description": "Nova is a OPENSTACK compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Qinling",
+    "module": "diagrams.openstack.compute",
+    "description": "Qinling is a OPENSTACK compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Zun",
+    "module": "diagrams.openstack.compute",
+    "description": "Zun is a OPENSTACK compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Kuryr",
+    "module": "diagrams.openstack.containerservices",
+    "description": "Kuryr is a OPENSTACK containerservices component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Ansible",
+    "module": "diagrams.openstack.deployment",
+    "description": "Ansible is a OPENSTACK deployment component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Charms",
+    "module": "diagrams.openstack.deployment",
+    "description": "Charms is a OPENSTACK deployment component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Chef",
+    "module": "diagrams.openstack.deployment",
+    "description": "Chef is a OPENSTACK deployment component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Helm",
+    "module": "diagrams.openstack.deployment",
+    "description": "Helm is a OPENSTACK deployment component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Kolla",
+    "module": "diagrams.openstack.deployment",
+    "description": "Kolla is a OPENSTACK deployment component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "KollaAnsible",
+    "module": "diagrams.openstack.deployment",
+    "description": "KollaAnsible is a OPENSTACK deployment component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "TripleO",
+    "module": "diagrams.openstack.deployment",
+    "description": "TripleO is a OPENSTACK deployment component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Horizon",
+    "module": "diagrams.openstack.frontend",
+    "description": "Horizon is a OPENSTACK frontend component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Monasca",
+    "module": "diagrams.openstack.monitoring",
+    "description": "Monasca is a OPENSTACK monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Telemetry",
+    "module": "diagrams.openstack.monitoring",
+    "description": "Telemetry is a OPENSTACK monitoring component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Tricircle",
+    "module": "diagrams.openstack.multiregion",
+    "description": "Tricircle is a OPENSTACK multiregion component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Designate",
+    "module": "diagrams.openstack.networking",
+    "description": "Designate is a OPENSTACK networking component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Neutron",
+    "module": "diagrams.openstack.networking",
+    "description": "Neutron is a OPENSTACK networking component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Octavia",
+    "module": "diagrams.openstack.networking",
+    "description": "Octavia is a OPENSTACK networking component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Tacker",
+    "module": "diagrams.openstack.nfv",
+    "description": "Tacker is a OPENSTACK nfv component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Congress",
+    "module": "diagrams.openstack.optimization",
+    "description": "Congress is a OPENSTACK optimization component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Rally",
+    "module": "diagrams.openstack.optimization",
+    "description": "Rally is a OPENSTACK optimization component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Vitrage",
+    "module": "diagrams.openstack.optimization",
+    "description": "Vitrage is a OPENSTACK optimization component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Watcher",
+    "module": "diagrams.openstack.optimization",
+    "description": "Watcher is a OPENSTACK optimization component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Blazar",
+    "module": "diagrams.openstack.orchestration",
+    "description": "Blazar is a OPENSTACK orchestration component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Heat",
+    "module": "diagrams.openstack.orchestration",
+    "description": "Heat is a OPENSTACK orchestration component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Mistral",
+    "module": "diagrams.openstack.orchestration",
+    "description": "Mistral is a OPENSTACK orchestration component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Senlin",
+    "module": "diagrams.openstack.orchestration",
+    "description": "Senlin is a OPENSTACK orchestration component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Zaqar",
+    "module": "diagrams.openstack.orchestration",
+    "description": "Zaqar is a OPENSTACK orchestration component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "LOCI",
+    "module": "diagrams.openstack.packaging",
+    "description": "LOCI is a OPENSTACK packaging component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Puppet",
+    "module": "diagrams.openstack.packaging",
+    "description": "Puppet is a OPENSTACK packaging component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "RPM",
+    "module": "diagrams.openstack.packaging",
+    "description": "RPM is a OPENSTACK packaging component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Barbican",
+    "module": "diagrams.openstack.sharedservices",
+    "description": "Barbican is a OPENSTACK sharedservices component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Glance",
+    "module": "diagrams.openstack.sharedservices",
+    "description": "Glance is a OPENSTACK sharedservices component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Karbor",
+    "module": "diagrams.openstack.sharedservices",
+    "description": "Karbor is a OPENSTACK sharedservices component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Keystone",
+    "module": "diagrams.openstack.sharedservices",
+    "description": "Keystone is a OPENSTACK sharedservices component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Searchlight",
+    "module": "diagrams.openstack.sharedservices",
+    "description": "Searchlight is a OPENSTACK sharedservices component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Cinder",
+    "module": "diagrams.openstack.storage",
+    "description": "Cinder is a OPENSTACK storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Manila",
+    "module": "diagrams.openstack.storage",
+    "description": "Manila is a OPENSTACK storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Swift",
+    "module": "diagrams.openstack.storage",
+    "description": "Swift is a OPENSTACK storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "OpenStackClient",
+    "module": "diagrams.openstack.user",
+    "description": "OpenStackClient is a OPENSTACK user component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Openstackclient",
+    "module": "diagrams.openstack.user",
+    "description": "Openstackclient is a OPENSTACK user component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Magnum",
+    "module": "diagrams.openstack.workloadprovisioning",
+    "description": "Magnum is a OPENSTACK workloadprovisioning component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Sahara",
+    "module": "diagrams.openstack.workloadprovisioning",
+    "description": "Sahara is a OPENSTACK workloadprovisioning component"
+  },
+  {
+    "type": "provider",
+    "provider": "openstack",
+    "component": "Trove",
+    "module": "diagrams.openstack.workloadprovisioning",
+    "description": "Trove is a OPENSTACK workloadprovisioning component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "Compute",
+    "module": "diagrams.outscale.compute",
+    "description": "Compute is a OUTSCALE compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "DirectConnect",
+    "module": "diagrams.outscale.compute",
+    "description": "DirectConnect is a OUTSCALE compute component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "ClientVpn",
+    "module": "diagrams.outscale.network",
+    "description": "ClientVpn is a OUTSCALE network component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "InternetService",
+    "module": "diagrams.outscale.network",
+    "description": "InternetService is a OUTSCALE network component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "LoadBalancer",
+    "module": "diagrams.outscale.network",
+    "description": "LoadBalancer is a OUTSCALE network component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "NatService",
+    "module": "diagrams.outscale.network",
+    "description": "NatService is a OUTSCALE network component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "Net",
+    "module": "diagrams.outscale.network",
+    "description": "Net is a OUTSCALE network component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "Firewall",
+    "module": "diagrams.outscale.security",
+    "description": "Firewall is a OUTSCALE security component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "IdentityAndAccessManagement",
+    "module": "diagrams.outscale.security",
+    "description": "IdentityAndAccessManagement is a OUTSCALE security component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "SimpleStorageService",
+    "module": "diagrams.outscale.storage",
+    "description": "SimpleStorageService is a OUTSCALE storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "outscale",
+    "component": "Storage",
+    "module": "diagrams.outscale.storage",
+    "description": "Storage is a OUTSCALE storage component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Action",
+    "module": "diagrams.programming.flowchart",
+    "description": "Action is a PROGRAMMING flowchart component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Collate",
+    "module": "diagrams.programming.flowchart",
+    "description": "Collate is a PROGRAMMING flowchart component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Database",
+    "module": "diagrams.programming.flowchart",
+    "description": "Database is a PROGRAMMING flowchart component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Decision",
+    "module": "diagrams.programming.flowchart",
+    "description": "Decision is a PROGRAMMING flowchart component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Delay",
+    "module": "diagrams.programming.flowchart",
+    "description": "Delay is a PROGRAMMING flowchart component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Display",
+    "module": "diagrams.programming.flowchart",
+    "description": "Display is a PROGRAMMING flowchart component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Angular",
+    "module": "diagrams.programming.framework",
+    "description": "Angular is a PROGRAMMING framework component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Backbone",
+    "module": "diagrams.programming.framework",
+    "description": "Backbone is a PROGRAMMING framework component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Camel",
+    "module": "diagrams.programming.framework",
+    "description": "Camel is a PROGRAMMING framework component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Django",
+    "module": "diagrams.programming.framework",
+    "description": "Django is a PROGRAMMING framework component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "DotNet",
+    "module": "diagrams.programming.framework",
+    "description": "DotNet is a PROGRAMMING framework component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Dotnet",
+    "module": "diagrams.programming.framework",
+    "description": "Dotnet is a PROGRAMMING framework component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Ember",
+    "module": "diagrams.programming.framework",
+    "description": "Ember is a PROGRAMMING framework component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Bash",
+    "module": "diagrams.programming.language",
+    "description": "Bash is a PROGRAMMING language component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "C",
+    "module": "diagrams.programming.language",
+    "description": "C is a PROGRAMMING language component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Cpp",
+    "module": "diagrams.programming.language",
+    "description": "Cpp is a PROGRAMMING language component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Csharp",
+    "module": "diagrams.programming.language",
+    "description": "Csharp is a PROGRAMMING language component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Dart",
+    "module": "diagrams.programming.language",
+    "description": "Dart is a PROGRAMMING language component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Elixir",
+    "module": "diagrams.programming.language",
+    "description": "Elixir is a PROGRAMMING language component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Erlang",
+    "module": "diagrams.programming.language",
+    "description": "Erlang is a PROGRAMMING language component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Go",
+    "module": "diagrams.programming.language",
+    "description": "Go is a PROGRAMMING language component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Java",
+    "module": "diagrams.programming.language",
+    "description": "Java is a PROGRAMMING language component"
+  },
+  {
+    "type": "provider",
+    "provider": "programming",
+    "component": "Dapr",
+    "module": "diagrams.programming.runtime",
+    "description": "Dapr is a PROGRAMMING runtime component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Newrelic",
+    "module": "diagrams.saas.alerting",
+    "description": "Newrelic is a SAAS alerting component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Opsgenie",
+    "module": "diagrams.saas.alerting",
+    "description": "Opsgenie is a SAAS alerting component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Pagerduty",
+    "module": "diagrams.saas.alerting",
+    "description": "Pagerduty is a SAAS alerting component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Pushover",
+    "module": "diagrams.saas.alerting",
+    "description": "Pushover is a SAAS alerting component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Xmatters",
+    "module": "diagrams.saas.alerting",
+    "description": "Xmatters is a SAAS alerting component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Dataform",
+    "module": "diagrams.saas.analytics",
+    "description": "Dataform is a SAAS analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Snowflake",
+    "module": "diagrams.saas.analytics",
+    "description": "Snowflake is a SAAS analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Stitch",
+    "module": "diagrams.saas.analytics",
+    "description": "Stitch is a SAAS analytics component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Akamai",
+    "module": "diagrams.saas.cdn",
+    "description": "Akamai is a SAAS cdn component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Cloudflare",
+    "module": "diagrams.saas.cdn",
+    "description": "Cloudflare is a SAAS cdn component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Fastly",
+    "module": "diagrams.saas.cdn",
+    "description": "Fastly is a SAAS cdn component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Discord",
+    "module": "diagrams.saas.chat",
+    "description": "Discord is a SAAS chat component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Line",
+    "module": "diagrams.saas.chat",
+    "description": "Line is a SAAS chat component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Mattermost",
+    "module": "diagrams.saas.chat",
+    "description": "Mattermost is a SAAS chat component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Messenger",
+    "module": "diagrams.saas.chat",
+    "description": "Messenger is a SAAS chat component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "RocketChat",
+    "module": "diagrams.saas.chat",
+    "description": "RocketChat is a SAAS chat component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Slack",
+    "module": "diagrams.saas.chat",
+    "description": "Slack is a SAAS chat component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Teams",
+    "module": "diagrams.saas.chat",
+    "description": "Teams is a SAAS chat component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Twilio",
+    "module": "diagrams.saas.communication",
+    "description": "Twilio is a SAAS communication component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Nextcloud",
+    "module": "diagrams.saas.filesharing",
+    "description": "Nextcloud is a SAAS filesharing component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Auth0",
+    "module": "diagrams.saas.identity",
+    "description": "Auth0 is a SAAS identity component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Okta",
+    "module": "diagrams.saas.identity",
+    "description": "Okta is a SAAS identity component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "DataDog",
+    "module": "diagrams.saas.logging",
+    "description": "DataDog is a SAAS logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Datadog",
+    "module": "diagrams.saas.logging",
+    "description": "Datadog is a SAAS logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "NewRelic",
+    "module": "diagrams.saas.logging",
+    "description": "NewRelic is a SAAS logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Newrelic",
+    "module": "diagrams.saas.logging",
+    "description": "Newrelic is a SAAS logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Papertrail",
+    "module": "diagrams.saas.logging",
+    "description": "Papertrail is a SAAS logging component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Cloudinary",
+    "module": "diagrams.saas.media",
+    "description": "Cloudinary is a SAAS media component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Recombee",
+    "module": "diagrams.saas.recommendation",
+    "description": "Recombee is a SAAS recommendation component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Sonarqube",
+    "module": "diagrams.saas.security",
+    "description": "Sonarqube is a SAAS security component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Facebook",
+    "module": "diagrams.saas.social",
+    "description": "Facebook is a SAAS social component"
+  },
+  {
+    "type": "provider",
+    "provider": "saas",
+    "component": "Twitter",
+    "module": "diagrams.saas.social",
+    "description": "Twitter is a SAAS social component"
+  }
+]

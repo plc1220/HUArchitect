@@ -1,0 +1,65 @@
+[
+  {
+    "type": "example",
+    "question": "Design a containerized application architecture with ECS",
+    "answer": "This architecture shows a containerized application running on Amazon ECS with load balancing and RDS database.",
+    "code": "from diagrams import Diagram\nfrom diagrams.aws.compute import ECS\nfrom diagrams.aws.database import RDS\nfrom diagrams.aws.network import ELB\n\nwith Diagram(\"Containerized App\", show=False):\n    lb = ELB(\"Load Balancer\")\n    containers = [ECS(\"Container 1\"),\n                 ECS(\"Container 2\")]\n    db = RDS(\"Database\")\n    \n    lb >> containers >> db",
+    "search_text": "Design a containerized application architecture with ECS This architecture shows a containerized application running on Amazon ECS with load balancing and RDS database."
+  },
+  {
+    "type": "example",
+    "question": "Create a serverless API with AWS Lambda and DynamoDB",
+    "answer": "This architecture demonstrates a basic serverless API setup using AWS Lambda for request handling and DynamoDB for data storage.",
+    "code": "from diagrams import Diagram\nfrom diagrams.aws.compute import Lambda\nfrom diagrams.aws.database import DynamoDB\nfrom diagrams.aws.network import APIGateway\n\nwith Diagram(\"Serverless API\", show=False):\n    api = APIGateway(\"API Gateway\")\n    lambda_fn = Lambda(\"API Handler\")\n    db = DynamoDB(\"Users Table\")\n    \n    api >> lambda_fn >> db",
+    "search_text": "Create a serverless API with AWS Lambda and DynamoDB This architecture demonstrates a basic serverless API setup using AWS Lambda for request handling and DynamoDB for data storage."
+  },
+  {
+    "type": "example",
+    "question": "Create a microservices architecture using Azure Kubernetes Service",
+    "answer": "This architecture demonstrates a microservices setup using AKS with Azure SQL Database for persistence.",
+    "code": "from diagrams import Diagram\nfrom diagrams.azure.compute import AKS\nfrom diagrams.azure.database import SQLDatabases\nfrom diagrams.azure.network import LoadBalancers\n\nwith Diagram(\"Azure Microservices\", show=False):\n    lb = LoadBalancers(\"Load Balancer\")\n    aks = AKS(\"Kubernetes\")\n    db = SQLDatabases(\"Azure SQL\")\n    \n    lb >> aks >> db",
+    "search_text": "Create a microservices architecture using Azure Kubernetes Service This architecture demonstrates a microservices setup using AKS with Azure SQL Database for persistence."
+  },
+  {
+    "type": "example",
+    "question": "Design a machine learning pipeline on Google Cloud",
+    "answer": "This architecture shows a machine learning pipeline using various GCP services for data processing and model training.",
+    "code": "from diagrams import Diagram\nfrom diagrams.gcp.analytics import BigQuery, Dataflow\nfrom diagrams.gcp.ml import AIPlatform\n\nwith Diagram(\"ML Pipeline\", show=False):\n    bq = BigQuery(\"Data Warehouse\")\n    flow = Dataflow(\"Data Processing\")\n    ml = AIPlatform(\"Model Training\")\n    \n    bq >> flow >> ml",
+    "search_text": "Design a machine learning pipeline on Google Cloud This architecture shows a machine learning pipeline using various GCP services for data processing and model training."
+  },
+  {
+    "type": "example",
+    "question": "How to design a clustered web services architecture with caching?",
+    "answer": "This example demonstrates a clustered web service setup with DNS, load balancing, multiple web servers, database replication, and caching.",
+    "code": "from diagrams import Cluster, Diagram\nfrom diagrams.aws.compute import ECS\nfrom diagrams.aws.database import ElastiCache, RDS\nfrom diagrams.aws.network import ELB\nfrom diagrams.aws.network import Route53\n\nwith Diagram(\"Clustered Web Services\", show=False):\n    dns = Route53(\"dns\")\n    lb = ELB(\"lb\")\n\n    with Cluster(\"Services\"):\n        svc_group = [ECS(\"web1\"),\n                     ECS(\"web2\"),\n                     ECS(\"web3\")]\n\n    with Cluster(\"DB Cluster\"):\n        db_primary = RDS(\"userdb\")\n        db_primary - [RDS(\"userdb ro\")]\n\n    memcached = ElastiCache(\"memcached\")\n\n    dns >> lb >> svc_group\n    svc_group >> db_primary\n    svc_group >> memcached",
+    "search_text": "How to design a clustered web services architecture with caching? This example demonstrates a clustered web service setup with DNS, load balancing, multiple web servers, database replication, and caching."
+  },
+  {
+    "type": "example",
+    "question": "How to create diagrams with custom icons and message brokers?",
+    "answer": "This example demonstrates using custom icons and showing a message broker architecture with Kubernetes consumers.",
+    "code": "from urllib.request import urlretrieve\n\nfrom diagrams import Cluster, Diagram\nfrom diagrams.aws.database import Aurora\nfrom diagrams.custom import Custom\nfrom diagrams.k8s.compute import Pod\n\n# Download an image to be used into a Custom Node class\nrabbitmq_url = \"https://jpadilla.github.io/rabbitmqapp/assets/img/icon.png\"\nrabbitmq_icon = \"rabbitmq.png\"\nurlretrieve(rabbitmq_url, rabbitmq_icon)\n\nwith Diagram(\"Broker Consumers\", show=False):\n    with Cluster(\"Consumers\"):\n        consumers = [\n            Pod(\"worker\"),\n            Pod(\"worker\"),\n            Pod(\"worker\")]\n\n    queue = Custom(\"Message queue\", rabbitmq_icon)\n\n    queue >> consumers >> Aurora(\"Database\")",
+    "search_text": "How to create diagrams with custom icons and message brokers? This example demonstrates using custom icons and showing a message broker architecture with Kubernetes consumers."
+  },
+  {
+    "type": "example",
+    "question": "How to implement an event processing architecture?",
+    "answer": "This example shows a complex event processing system with Kubernetes source, worker clusters, queues, and multiple processing handlers.",
+    "code": "from diagrams import Cluster, Diagram\nfrom diagrams.aws.compute import ECS, EKS, Lambda\nfrom diagrams.aws.database import Redshift\nfrom diagrams.aws.integration import SQS\nfrom diagrams.aws.storage import S3\n\nwith Diagram(\"Event Processing\", show=False):\n    source = EKS(\"k8s source\")\n\n    with Cluster(\"Event Flows\"):\n        with Cluster(\"Event Workers\"):\n            workers = [ECS(\"worker1\"),\n                       ECS(\"worker2\"),\n                       ECS(\"worker3\")]\n\n        queue = SQS(\"event queue\")\n\n        with Cluster(\"Processing\"):\n            handlers = [Lambda(\"proc1\"),\n                        Lambda(\"proc2\"),\n                        Lambda(\"proc3\")]\n\n    store = S3(\"events store\")\n    dw = Redshift(\"analytics\")\n\n    source >> workers >> queue >> handlers\n    handlers >> store\n    handlers >> dw",
+    "search_text": "How to implement an event processing architecture? This example shows a complex event processing system with Kubernetes source, worker clusters, queues, and multiple processing handlers."
+  },
+  {
+    "type": "example",
+    "question": "How to represent a load-balanced worker pool architecture?",
+    "answer": "This example shows multiple EC2 workers behind a load balancer writing to a central database.",
+    "code": "from diagrams import Diagram\nfrom diagrams.aws.compute import EC2\nfrom diagrams.aws.database import RDS\nfrom diagrams.aws.network import ELB\n\nwith Diagram(\"Grouped Workers\", show=False, direction=\"TB\"):\n    ELB(\"lb\") >> [EC2(\"worker1\"),\n                  EC2(\"worker2\"),\n                  EC2(\"worker3\"),\n                  EC2(\"worker4\"),\n                  EC2(\"worker5\")] >> RDS(\"events\")",
+    "search_text": "How to represent a load-balanced worker pool architecture? This example shows multiple EC2 workers behind a load balancer writing to a central database."
+  },
+  {
+    "type": "example",
+    "question": "How to diagram a stateful Kubernetes architecture?",
+    "answer": "This example shows a stateful application in Kubernetes with persistent volumes and storage classes.",
+    "code": "from diagrams import Cluster, Diagram\nfrom diagrams.k8s.compute import Pod, StatefulSet\nfrom diagrams.k8s.network import Service\nfrom diagrams.k8s.storage import PV, PVC, StorageClass\n\nwith Diagram(\"Stateful Architecture\", show=False):\n    with Cluster(\"Apps\"):\n        svc = Service(\"svc\")\n        sts = StatefulSet(\"sts\")\n\n        apps = []\n        for _ in range(3):\n            pod = Pod(\"pod\")\n            pvc = PVC(\"pvc\")\n            pod - sts - pvc\n            apps.append(svc >> pod >> pvc)\n\n    apps << PV(\"pv\") << StorageClass(\"sc\")",
+    "search_text": "How to diagram a stateful Kubernetes architecture? This example shows a stateful application in Kubernetes with persistent volumes and storage classes."
+  }
+]
