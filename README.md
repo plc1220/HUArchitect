@@ -30,6 +30,8 @@ A Streamlit application that helps generate architecture diagrams using the Pyth
 
 ## Setup
 
+### Local Setup
+
 1. Create a virtual environment:
 ```bash
 python -m venv CA
@@ -38,25 +40,67 @@ source CA/bin/activate  # On Unix/macOS
 
 2. Install dependencies:
 ```bash
-pip install streamlit diagrams sentence-transformers langchain-google-vertexai python-dotenv
+pip install -r requirements.txt
 ```
 
-3. Set up environment variables in `.env`:
+### Docker Setup
+
+1. Build and run using Docker Compose:
+```bash
+docker-compose up --build
 ```
-OPENWEATHER_API_KEY=your_api_key
+
+This will start both the application and the PostgreSQL database.
+
+## Environment Configuration
+
+Create a `.env` file based on `.env.example`:
+
+```
+# Database Configuration
+DB_USER=postgres
+DB_PASSWORD=your_db_password
+DB_NAME=diagram_db
+DB_HOST=db
+DB_PORT=5432
+
+# Google Vertex AI Configuration
+GOOGLE_APPLICATION_CREDENTIALS=/app/my-rd-coe-demo-data-0f2a5a8dbc36.json
+VERTEX_AI_PROJECT=your_project_id
+VERTEX_AI_LOCATION=us-east5
+
+# Streamlit Configuration
+STREAMLIT_SERVER_PORT=8000
+STREAMLIT_SERVER_ADDRESS=0.0.0.0
 ```
 
 ## Usage
 
-1. Start the Streamlit app:
-```bash
-streamlit run main.py
-```
-
+1. Start the application:
+   - Local: `streamlit run main.py`
+   - Docker: `docker-compose up`
 2. Enter your architecture requirements in the text area
 3. Click "Generate Diagram" to create the diagram
 4. Review the generated diagram, code, and summary
 5. Use the conversation history to refine the diagram
+
+## Example Architecture Diagrams
+
+The project includes several example architecture diagrams:
+
+- `3-tier_architecture.png` - Basic three-tier application architecture
+- `3-tier_auto_scaling_app.png` - Three-tier architecture with auto-scaling
+- `airflow_on_eks_architecture.png` - Apache Airflow deployment on EKS
+- `aws_3-tier_architecture.png` - AWS-specific three-tier architecture
+- `azure_ml_pipeline.png` - Azure Machine Learning pipeline
+- `gcp_batch_analytics.png` - GCP batch analytics architecture
+- `gcp_data_analytics.png` - GCP data analytics pipeline
+- `mern_stack_on_eks.png` - MERN stack deployment on EKS
+- `netflix_clone_architecture.png` - Netflix-like streaming service architecture
+- `serverless_api.png` - Serverless API architecture
+- `whatsapp_clone_on_gcp.png` - WhatsApp-like messaging service on GCP
+
+These examples serve as references and can be used as templates for generating similar architectures.
 
 ## Knowledge Base
 
